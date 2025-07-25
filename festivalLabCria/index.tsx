@@ -107,6 +107,7 @@ const TaskIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-
 const PeopleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.282-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.282.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
 const InfoIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
 const TechIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>;
+const ChevronDownIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>);
 
 const sections = {
   vision: { title: "Visão Estratégica e Proposta de Valor", subtitle: "Entendendo o propósito e o valor do programa." },
@@ -498,7 +499,6 @@ const getAIAssistance = async (prompt: string): Promise<string> => {
   }
 };
 
-
 // =================================================================================
 // COMPONENTS
 // =================================================================================
@@ -523,7 +523,7 @@ const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
         >
           {items.map((item, index) => (
             <div key={index} className="w-full flex-shrink-0 px-1">
-              <div className="bg-accent-lavender/30 rounded-lg flex flex-col px-6 pt-6 pb-10 text-center">
+              <div className="bg-accent-lavender/30 rounded-lg flex flex-col px-6 pt-6 pb-12 text-center">
                 {item.title && <h4 className="font-bold text-dark-text text-lg mb-3">{item.title}</h4>}
                 <p className="text-dark-text/90 leading-relaxed text-base">{item.description}</p>
               </div>
@@ -533,6 +533,7 @@ const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
         <button
           onClick={goToPrevious}
           className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -ml-2 sm:-ml-4 z-10"
+          aria-label="Previous slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -541,6 +542,7 @@ const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
         <button
           onClick={goToNext}
           className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -mr-2 sm:-mr-4 z-10"
+          aria-label="Next slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -552,6 +554,7 @@ const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-2.5 h-2.5 rounded-full ${currentIndex === index ? 'bg-primary' : 'bg-primary/30'}`}
+              aria-label={`Go to slide ${index + 1}`}
             ></button>
           ))}
         </div>
@@ -566,6 +569,10 @@ const FlippableCard: React.FC<FlippableCardData> = ({ title, description }) => {
     <div
       className={`flip-card w-full h-64 cursor-pointer ${isFlipped ? 'flipped' : ''}`}
       onClick={() => setIsFlipped(!isFlipped)}
+      onKeyPress={(e) => e.key === 'Enter' && setIsFlipped(!isFlipped)}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isFlipped}
     >
       <div className="flip-card-inner">
         <div className="flip-card-front bg-accent-blue/40 text-center">
@@ -630,12 +637,6 @@ const SectionCard: React.FC<SectionCardProps> = ({ title, subtitle, content }) =
     </div>
   );
 };
-
-const ChevronDownIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-);
 
 const SemesterPlan: React.FC = () => {
   const [openCycle, setOpenCycle] = useState<number | null>(1);
@@ -838,6 +839,7 @@ const AIAssistant: React.FC = () => {
             placeholder="Digite sua mensagem..."
             disabled={isLoading}
             className="flex-grow bg-white/80 border border-accent-blue/60 text-dark-text rounded-lg p-3 focus:ring-2 focus:ring-secondary focus:outline-none transition-all"
+            aria-label="Chat input"
           />
           <button
             type="submit"
@@ -867,13 +869,11 @@ const ImplementationTimeline: React.FC = () => {
             </div>
 
             <div className="relative">
-                {/* Vertical line */}
                 <div className="absolute left-4 top-4 h-[calc(100%-2rem)] w-0.5 bg-accent-lavender/60" aria-hidden="true"></div>
 
                 <div className="space-y-12">
                     {implementationTimeline.map((milestone, milestoneIndex) => (
                         <div key={milestoneIndex} className="pl-12 relative">
-                            {/* Milestone Marker */}
                             <div className="absolute left-0 top-0 flex items-center justify-center w-8 h-8 rounded-full bg-secondary text-white font-bold text-lg shadow-md">
                                 {milestoneIndex + 1}
                             </div>
@@ -962,14 +962,14 @@ const renderWithTooltips = (text: string) => {
     );
 };
 
-const categoryIcons = {
-    'Tarefas': <TaskIcon />,
-    'Pessoas / Funções': <PeopleIcon />,
-    'Informações': <InfoIcon />,
-    'Tecnologias': <TechIcon />,
-};
-
 const OperationalProcess: React.FC = () => {
+    const categoryIcons = {
+        'Tarefas': <TaskIcon />,
+        'Pessoas / Funções': <PeopleIcon />,
+        'Informações': <InfoIcon />,
+        'Tecnologias': <TechIcon />,
+    }
+
     return (
         <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
             <div className="mb-8">
@@ -978,7 +978,6 @@ const OperationalProcess: React.FC = () => {
             </div>
 
             <div className="space-y-12">
-                {/* Processos do Mercado */}
                 <div>
                     <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Processos do Mercado (Customer Development)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -997,7 +996,6 @@ const OperationalProcess: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Matriz de Tarefas */}
                 <div>
                     <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Matriz das Tarefas Operacionais: Direção × Ambiente</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1028,6 +1026,7 @@ const OperationalProcess: React.FC = () => {
         </div>
     );
 };
+
 
 // =================================================================================
 // MAIN APP COMPONENT
@@ -1071,7 +1070,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-light-bg text-dark-text font-sans flex flex-col lg:flex-row">
-      {/* Sidebar Navigation */}
       <aside className="w-full lg:w-72 bg-white/30 backdrop-blur-sm lg:h-screen lg:fixed p-4 border-b lg:border-r border-primary/10">
         <div className="text-center mb-8 px-2">
             <h1 className="text-2xl font-raleway font-bold text-primary">Festival LAB Cria</h1>
@@ -1098,11 +1096,10 @@ const App: React.FC = () => {
           </ul>
         </nav>
          <div className="absolute bottom-6 left-4 right-4 text-center hidden lg:block">
-            <img src="https://raw.githubusercontent.com/LABirintar/comercial/main/logoslabirintar/Labirintar_RGB.png" alt="LABirintar Logo" className="h-6 mx-auto opacity-70" />
+            <img src="https://raw.githubusercontent.com/clubesa/clubesa.github.io/main/producao/festivalLabCria/logoslabirintar/Labirintar_RGB.png" alt="LABirintar Logo" className="h-6 mx-auto opacity-70" />
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 lg:ml-72 p-4 sm:p-6 md:p-10">
         <div className="max-w-4xl mx-auto">
           {renderSection()}
@@ -1120,7 +1117,11 @@ const App: React.FC = () => {
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<App />);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 } else {
-  console.error("Failed to find the root element");
+    console.error("Target container 'root' not found in the DOM.");
 }
