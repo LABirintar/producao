@@ -1,9 +1,10 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
 
 // =================================================================================
-// TYPE DEFINITIONS (from types.ts)
+// TYPE DEFINITIONS
 // =================================================================================
 
 interface WeeklyPlan {
@@ -57,8 +58,36 @@ interface MatrixQuadrant {
     details: MatrixDataDetail[];
 }
 
+interface FlippableCardData {
+  title: string;
+  description: string;
+}
+
+interface CarouselCardData {
+  title?: string;
+  description: string;
+}
+
+interface ContentItem {
+  title?: string;
+  content?: string;
+  points?: string[];
+  flippableCards?: FlippableCardData[];
+  carouselCards?: CarouselCardData[];
+  category?: string;
+  description?: string;
+  stage?: string;
+  action?: string;
+}
+
+interface SectionCardProps {
+  title: string;
+  subtitle: string;
+  content: ContentItem[];
+}
+
 // =================================================================================
-// CONSTANTS & ICONS (from constants.tsx)
+// ICONS & CONSTANTS
 // =================================================================================
 
 const StrategicVisionIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
@@ -78,7 +107,7 @@ const TaskIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-
 const PeopleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.282-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.282.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
 const InfoIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
 const TechIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" /></svg>;
-const ChevronDownIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>;
+const ChevronDownIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>);
 
 const sections = {
   vision: { title: "Visão Estratégica e Proposta de Valor", subtitle: "Entendendo o propósito e o valor do programa." },
@@ -438,7 +467,7 @@ const TOOLTIPS: { [key: string]: string } = {
 };
 
 // =================================================================================
-// SERVICES (from geminiService.ts)
+// GEMINI SERVICE
 // =================================================================================
 
 const getAIAssistance = async (prompt: string): Promise<string> => {
@@ -448,7 +477,7 @@ const getAIAssistance = async (prompt: string): Promise<string> => {
 
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
+
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
@@ -471,185 +500,225 @@ const getAIAssistance = async (prompt: string): Promise<string> => {
 };
 
 // =================================================================================
-// COMPONENT: OperationalProcess
+// COMPONENTS
 // =================================================================================
-const Tooltip: React.FC<{ text: string; children: React.ReactNode }> = ({ text, children }) => (
-    <span className="relative group inline-block">
-        {children}
-        <span className="absolute hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs p-3 text-sm text-white bg-dark-text/90 rounded-md shadow-lg z-20 backdrop-blur-sm transition-opacity duration-300">
-            {text}
-        </span>
-    </span>
-);
 
-const renderWithTooltips = (text: string) => {
-    const sortedKeys = Object.keys(TOOLTIPS).sort((a, b) => b.length - a.length);
-    const escapedKeys = sortedKeys.map(key => key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    const regex = new RegExp(`\\b(${escapedKeys.join('|')})\\b`, 'gi');
+const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    const parts = text.split(regex);
-    
-    return (
-        <>
-            {parts.map((part, index) => {
-                const lowerPart = part.toLowerCase();
-                if (TOOLTIPS[lowerPart]) {
-                    return (
-                        <Tooltip key={index} text={TOOLTIPS[lowerPart]}>
-                            <span className="font-semibold border-b border-secondary/60 border-dotted cursor-help">{part}</span>
-                        </Tooltip>
-                    );
-                }
-                return part;
-            })}
-        </>
-    );
-};
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? items.length - 1 : prevIndex - 1));
+  };
 
-const OperationalProcess: React.FC = () => {
-    const categoryIcons = {
-        'Tarefas': <TaskIcon />,
-        'Pessoas / Funções': <PeopleIcon />,
-        'Informações': <InfoIcon />,
-        'Tecnologias': <TechIcon />,
-    };
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === items.length - 1 ? 0 : prevIndex + 1));
+  };
 
-    return (
-        <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
-            <div className="mb-8">
-                <h2 className="text-3xl font-raleway font-bold text-primary">{sections.marketing.title}</h2>
-                <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.marketing.subtitle}</p>
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="relative w-full overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {items.map((item, index) => (
+            <div key={index} className="w-full flex-shrink-0 px-1">
+              <div className="bg-accent-lavender/30 rounded-lg flex flex-col px-6 pt-6 pb-12 text-center">
+                {item.title && <h4 className="font-bold text-dark-text text-lg mb-3">{item.title}</h4>}
+                <p className="text-dark-text/90 leading-relaxed text-base">{item.description}</p>
+              </div>
             </div>
-
-            <div className="space-y-12">
-                <div>
-                    <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Processos do Mercado (Customer Development)</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {operationalProcess.map(step => (
-                            <div key={step.title} className="bg-white/60 rounded-lg p-5 border border-accent-blue/30 shadow-sm">
-                                <h4 className="font-bold font-raleway text-lg text-dark-text">{step.title}</h4>
-                                <div className="my-3 py-2 px-4 bg-accent-blue/20 rounded-md text-center">
-                                    <p className="font-extrabold text-primary tracking-widest text-sm">{step.action}</p>
-                                </div>
-                                <p className="text-sm text-dark-text/90 mb-4 leading-relaxed">{step.description}</p>
-                                <div className="text-center py-2 bg-secondary/20 rounded-md text-secondary font-bold text-sm">
-                                    {step.result}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Matriz das Tarefas Operacionais: Direção × Ambiente</h3>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {tasksMatrix.map(quadrant => (
-                            <div key={quadrant.title} className="bg-white/60 rounded-lg p-5 border border-accent-lavender/40 shadow-sm flex flex-col">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-primary">{<quadrant.icon />}</span>
-                                    <h4 className="font-bold font-raleway text-xl text-primary">{quadrant.title}</h4>
-                                </div>
-                                <p className="text-sm text-dark-text/80 italic mb-6">{quadrant.description}</p>
-                                <div className="space-y-4 flex-grow">
-                                    {quadrant.details.map(detail => (
-                                        <div key={detail.category}>
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-secondary">{categoryIcons[detail.category]}</span>
-                                                <h5 className="font-semibold text-dark-text">{detail.category}</h5>
-                                            </div>
-                                            <p className="text-sm text-dark-text/90 pl-7 leading-relaxed">{renderWithTooltips(detail.items.join(' '))}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+          ))}
         </div>
-    );
+        <button
+          onClick={goToPrevious}
+          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -ml-2 sm:-ml-4 z-10"
+          aria-label="Previous slide"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={goToNext}
+          className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -mr-2 sm:-mr-4 z-10"
+          aria-label="Next slide"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+          {items.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2.5 h-2.5 rounded-full ${currentIndex === index ? 'bg-primary' : 'bg-primary/30'}`}
+              aria-label={`Go to slide ${index + 1}`}
+            ></button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-// =================================================================================
-// COMPONENT: ImplementationTimeline
-// =================================================================================
+const FlippableCard: React.FC<FlippableCardData> = ({ title, description }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  return (
+    <div
+      className={`flip-card w-full h-64 cursor-pointer ${isFlipped ? 'flipped' : ''}`}
+      onClick={() => setIsFlipped(!isFlipped)}
+      onKeyPress={(e) => e.key === 'Enter' && setIsFlipped(!isFlipped)}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isFlipped}
+    >
+      <div className="flip-card-inner">
+        <div className="flip-card-front bg-accent-blue/40 text-center">
+          <h4 className="text-lg font-bold text-dark-text">{title}</h4>
+        </div>
+        <div className="flip-card-back bg-accent-blue/80 text-center overflow-y-auto">
+          <p className="text-white text-sm">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-const ImplementationTimeline: React.FC = () => {
-    const [openSubMilestone, setOpenSubMilestone] = useState<string | null>(null);
+const SectionCard: React.FC<SectionCardProps> = ({ title, subtitle, content }) => {
+  return (
+    <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
+      <div className="mb-8">
+        <h2 className="text-3xl font-raleway font-bold text-primary">{title}</h2>
+        <p className="text-dark-text/80 mt-2 font-raleway font-medium">{subtitle}</p>
+      </div>
+      <div className="space-y-8">
+        {content.map((item, index) => (
+          <div key={index}>
+            {item.title && <h3 className="text-xl font-raleway font-semibold text-secondary mb-4">{item.title}</h3>}
+            {item.content && <p className="text-dark-text/90 leading-relaxed mb-4">{item.content}</p>}
 
-    const toggleSubMilestone = (title: string) => {
-        setOpenSubMilestone(prev => (prev === title ? null : title));
-    };
+            {item.carouselCards && <Carousel items={item.carouselCards} />}
 
-    return (
-        <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
-            <div className="mb-8">
-                <h2 className="text-3xl font-raleway font-bold text-primary">{sections.implementation.title}</h2>
-                <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.implementation.subtitle}</p>
-            </div>
+            {item.points && (
+              <ul className="space-y-3 mt-4 list-disc list-inside text-primary">
+                {item.points.map((point, pIndex) => (
+                  <li key={pIndex} className="text-dark-text/90 leading-relaxed">
+                    <span className="ml-2">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
 
-            <div className="relative">
-                <div className="absolute left-4 top-4 h-[calc(100%-2rem)] w-0.5 bg-accent-lavender/60" aria-hidden="true"></div>
-                <div className="space-y-12">
-                    {implementationTimeline.map((milestone, milestoneIndex) => (
-                        <div key={milestoneIndex} className="pl-12 relative">
-                            <div className="absolute left-0 top-0 flex items-center justify-center w-8 h-8 rounded-full bg-secondary text-white font-bold text-lg shadow-md">
-                                {milestoneIndex + 1}
+            {item.flippableCards && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {item.flippableCards.map((card, cardIndex) => (
+                  <FlippableCard key={cardIndex} title={card.title} description={card.description} />
+                ))}
+              </div>
+            )}
+
+            {item.category && item.description && (
+              <div className="bg-accent-blue/20 p-4 rounded-lg">
+                <p className="font-semibold text-secondary">{item.category}</p>
+                <p className="text-dark-text/90">{item.description}</p>
+              </div>
+            )}
+            {item.stage && item.action && (
+              <div className="bg-accent-blue/20 p-4 rounded-lg flex flex-col sm:flex-row">
+                <p className="font-bold text-secondary w-full sm:w-1/4">{item.stage}</p>
+                <p className="text-dark-text/90 w-full sm:w-3/4 mt-1 sm:mt-0">{item.action}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const SemesterPlan: React.FC = () => {
+  const [openCycle, setOpenCycle] = useState<number | null>(1);
+
+  const toggleCycle = (cycle: number) => {
+    setOpenCycle(prev => (prev === cycle ? null : cycle));
+  };
+
+  return (
+    <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
+      <div className="mb-8">
+        <h2 className="text-3xl font-raleway font-bold text-primary">{sections.planning.title}</h2>
+        <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.planning.subtitle}</p>
+      </div>
+      <div className="space-y-4">
+        {semesterPlan.map((cycleData) => {
+            const isOpen = openCycle === cycleData.cycle;
+            return (
+              <div key={cycleData.cycle} className="bg-white/60 rounded-lg border border-accent-lavender/40 overflow-hidden shadow-sm transition-all duration-300">
+                 <button
+                    className="w-full flex justify-between items-center text-left p-4 sm:p-6 hover:bg-accent-lavender/20 transition-colors"
+                    onClick={() => toggleCycle(cycleData.cycle)}
+                    aria-expanded={isOpen}
+                 >
+                    <div className="flex-grow">
+                        <div className="flex items-center gap-4">
+                             <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary font-bold text-lg">
+                                {cycleData.cycle}
                             </div>
-                            <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">{milestone.title}</h3>
-                            <div className="space-y-4">
-                                {milestone.subMilestones.map((sub, subIndex) => {
-                                    const isOpen = openSubMilestone === sub.title;
-                                    return (
-                                        <div key={subIndex} className="bg-white/60 rounded-lg border border-accent-blue/30 overflow-hidden shadow-sm">
-                                            <button
-                                                className="w-full flex justify-between items-center text-left p-4 hover:bg-accent-lavender/20 transition-colors"
-                                                onClick={() => toggleSubMilestone(sub.title)}
-                                                aria-expanded={isOpen}
-                                            >
-                                                <span className="font-semibold text-dark-text">{sub.title}</span>
-                                                <span className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                                                  <ChevronDownIcon />
-                                                </span>
-                                            </button>
-                                            <div
-                                                className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-                                            >
-                                                <div className="overflow-hidden">
-                                                    <div className="p-4 pt-0 text-dark-text/90 leading-relaxed">
-                                                        <p>{sub.details}</p>
-                                                        {sub.process && (
-                                                            <div className="mt-4 border-t border-accent-lavender pt-4">
-                                                                <ol className="space-y-3">
-                                                                    {sub.process.map((step, stepIndex) => (
-                                                                        <li key={stepIndex} className="flex items-start gap-3">
-                                                                            <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary font-bold text-sm mt-0.5">
-                                                                                {stepIndex + 1}
-                                                                            </div>
-                                                                            <p className="flex-1">{step}</p>
-                                                                        </li>
-                                                                    ))}
-                                                                </ol>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                            <div>
+                               <p className="font-semibold text-secondary text-lg font-raleway">Ciclo {cycleData.cycle}: {cycleData.guidingQuestion}</p>
+                               <p className="text-sm text-dark-text/70">Semanas {cycleData.weeks} | Produto: {cycleData.expectedProduct}</p>
                             </div>
                         </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-};
+                    </div>
+                     <span className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                        <ChevronDownIcon />
+                     </span>
+                 </button>
 
-// =================================================================================
-// COMPONENT: AIAssistant
-// =================================================================================
+                 <div
+                    className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                 >
+                    <div className="overflow-hidden">
+                        <div className="p-4 sm:p-6 border-t border-accent-lavender/40 space-y-6">
+                            {cycleData.detailedWeeks.map(week => (
+                               <div key={week.week} className="border-l-4 border-accent-blue/50 pl-4 py-2">
+                                  <h4 className="font-bold text-dark-text mb-3">Semana {week.week}</h4>
+                                  <div className="space-y-3 text-sm text-dark-text/90">
+                                      <div className="flex items-start gap-3">
+                                          <span className="text-secondary mt-0.5 flex-shrink-0"><ObjectivesIcon /></span>
+                                          <p><span className="font-semibold text-dark-text">Objetivos:</span> {week.objective}</p>
+                                      </div>
+                                      <div className="flex items-start gap-3">
+                                          <span className="text-secondary mt-0.5 flex-shrink-0"><ContentIcon /></span>
+                                          <p><span className="font-semibold text-dark-text">Conteúdos:</span> {week.content}</p>
+                                      </div>
+                                      <div className="flex items-start gap-3">
+                                          <span className="text-secondary mt-0.5 flex-shrink-0"><SkillsIcon /></span>
+                                          <p><span className="font-semibold text-dark-text">Habilidades BNCC:</span> {week.skills}</p>
+                                      </div>
+                                      <div className="flex items-start gap-3">
+                                          <span className="text-secondary mt-0.5 flex-shrink-0"><PillarsIcon /></span>
+                                          <p><span className="font-semibold text-dark-text">Pilares LABirintar:</span> {week.pillars}</p>
+                                      </div>
+                                  </div>
+                               </div>
+                            ))}
+                        </div>
+                    </div>
+                 </div>
+              </div>
+            )
+        })}
+      </div>
+       <div className="mt-8 pt-6 border-t border-primary/10">
+            <h3 className="text-xl font-raleway font-semibold text-secondary mb-3">Considerações Finais</h3>
+            <p className="text-dark-text/80 leading-relaxed italic">{planningFinalConsiderations}</p>
+        </div>
+    </div>
+  );
+};
 
 const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -770,6 +839,7 @@ const AIAssistant: React.FC = () => {
             placeholder="Digite sua mensagem..."
             disabled={isLoading}
             className="flex-grow bg-white/80 border border-accent-blue/60 text-dark-text rounded-lg p-3 focus:ring-2 focus:ring-secondary focus:outline-none transition-all"
+            aria-label="Chat input"
           />
           <button
             type="submit"
@@ -784,259 +854,184 @@ const AIAssistant: React.FC = () => {
   );
 };
 
+const ImplementationTimeline: React.FC = () => {
+    const [openSubMilestone, setOpenSubMilestone] = useState<string | null>(null);
 
-// =================================================================================
-// COMPONENT: SemesterPlan
-// =================================================================================
-const SemesterPlan: React.FC = () => {
-  const [openCycle, setOpenCycle] = useState<number | null>(1);
+    const toggleSubMilestone = (title: string) => {
+        setOpenSubMilestone(prev => (prev === title ? null : title));
+    };
 
-  const toggleCycle = (cycle: number) => {
-    setOpenCycle(prev => (prev === cycle ? null : cycle));
-  };
-
-  return (
-    <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
-      <div className="mb-8">
-        <h2 className="text-3xl font-raleway font-bold text-primary">{sections.planning.title}</h2>
-        <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.planning.subtitle}</p>
-      </div>
-      <div className="space-y-4">
-        {semesterPlan.map((cycleData) => {
-            const isOpen = openCycle === cycleData.cycle;
-            return (
-              <div key={cycleData.cycle} className="bg-white/60 rounded-lg border border-accent-lavender/40 overflow-hidden shadow-sm transition-all duration-300">
-                 <button
-                    className="w-full flex justify-between items-center text-left p-4 sm:p-6 hover:bg-accent-lavender/20 transition-colors"
-                    onClick={() => toggleCycle(cycleData.cycle)}
-                    aria-expanded={isOpen}
-                 >
-                    <div className="flex-grow">
-                        <div className="flex items-center gap-4">
-                             <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary font-bold text-lg">
-                                {cycleData.cycle}
-                            </div>
-                            <div>
-                               <p className="font-semibold text-secondary text-lg font-raleway">Ciclo {cycleData.cycle}: {cycleData.guidingQuestion}</p>
-                               <p className="text-sm text-dark-text/70">Semanas {cycleData.weeks} | Produto: {cycleData.expectedProduct}</p>
-                            </div>
-                        </div>
-                    </div>
-                     <span className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                        <ChevronDownIcon />
-                     </span>
-                 </button>
-
-                 <div
-                    className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-                 >
-                    <div className="overflow-hidden">
-                        <div className="p-4 sm:p-6 border-t border-accent-lavender/40 space-y-6">
-                            {cycleData.detailedWeeks.map(week => (
-                               <div key={week.week} className="border-l-4 border-accent-blue/50 pl-4 py-2">
-                                  <h4 className="font-bold text-dark-text mb-3">Semana {week.week}</h4>
-                                  <div className="space-y-3 text-sm text-dark-text/90">
-                                      <div className="flex items-start gap-3">
-                                          <span className="text-secondary mt-0.5 flex-shrink-0"><ObjectivesIcon /></span>
-                                          <p><span className="font-semibold text-dark-text">Objetivos:</span> {week.objective}</p>
-                                      </div>
-                                      <div className="flex items-start gap-3">
-                                          <span className="text-secondary mt-0.5 flex-shrink-0"><ContentIcon /></span>
-                                          <p><span className="font-semibold text-dark-text">Conteúdos:</span> {week.content}</p>
-                                      </div>
-                                      <div className="flex items-start gap-3">
-                                          <span className="text-secondary mt-0.5 flex-shrink-0"><SkillsIcon /></span>
-                                          <p><span className="font-semibold text-dark-text">Habilidades BNCC:</span> {week.skills}</p>
-                                      </div>
-                                      <div className="flex items-start gap-3">
-                                          <span className="text-secondary mt-0.5 flex-shrink-0"><PillarsIcon /></span>
-                                          <p><span className="font-semibold text-dark-text">Pilares LABirintar:</span> {week.pillars}</p>
-                                      </div>
-                                  </div>
-                               </div>
-                            ))}
-                        </div>
-                    </div>
-                 </div>
-              </div>
-            )
-        })}
-      </div>
-       <div className="mt-8 pt-6 border-t border-primary/10">
-            <h3 className="text-xl font-raleway font-semibold text-secondary mb-3">Considerações Finais</h3>
-            <p className="text-dark-text/80 leading-relaxed italic">{planningFinalConsiderations}</p>
-        </div>
-    </div>
-  );
-};
-
-// =================================================================================
-// COMPONENT: SectionCard
-// =================================================================================
-interface FlippableCardData {
-  title: string;
-  description: string;
-}
-
-interface CarouselCardData {
-  title?: string;
-  description: string;
-}
-
-interface ContentItem {
-  title?: string;
-  content?: string;
-  points?: string[];
-  flippableCards?: FlippableCardData[];
-  carouselCards?: CarouselCardData[];
-  category?: string;
-  description?: string;
-  stage?: string;
-  action?: string;
-}
-
-interface SectionCardProps {
-  title: string;
-  subtitle: string;
-  content: ContentItem[];
-}
-
-const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? items.length - 1 : prevIndex - 1));
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === items.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  return (
-    <div className="max-w-md mx-auto">
-      <div className="relative w-full overflow-hidden">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {items.map((item, index) => (
-            <div key={index} className="w-full flex-shrink-0 px-1">
-              <div className="bg-accent-lavender/30 rounded-lg flex flex-col px-6 pt-6 pb-12 text-center">
-                {item.title && <h4 className="font-bold text-dark-text text-lg mb-3">{item.title}</h4>}
-                <p className="text-dark-text/90 leading-relaxed text-base">{item.description}</p>
-              </div>
+    return (
+        <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
+            <div className="mb-8">
+                <h2 className="text-3xl font-raleway font-bold text-primary">{sections.implementation.title}</h2>
+                <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.implementation.subtitle}</p>
             </div>
-          ))}
+
+            <div className="relative">
+                <div className="absolute left-4 top-4 h-[calc(100%-2rem)] w-0.5 bg-accent-lavender/60" aria-hidden="true"></div>
+
+                <div className="space-y-12">
+                    {implementationTimeline.map((milestone, milestoneIndex) => (
+                        <div key={milestoneIndex} className="pl-12 relative">
+                            <div className="absolute left-0 top-0 flex items-center justify-center w-8 h-8 rounded-full bg-secondary text-white font-bold text-lg shadow-md">
+                                {milestoneIndex + 1}
+                            </div>
+                            <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">{milestone.title}</h3>
+
+                            <div className="space-y-4">
+                                {milestone.subMilestones.map((sub, subIndex) => {
+                                    const isOpen = openSubMilestone === sub.title;
+                                    return (
+                                        <div key={subIndex} className="bg-white/60 rounded-lg border border-accent-blue/30 overflow-hidden shadow-sm">
+                                            <button
+                                                className="w-full flex justify-between items-center text-left p-4 hover:bg-accent-lavender/20 transition-colors"
+                                                onClick={() => toggleSubMilestone(sub.title)}
+                                                aria-expanded={isOpen}
+                                            >
+                                                <span className="font-semibold text-dark-text">{sub.title}</span>
+                                                <span className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                                                  <ChevronDownIcon />
+                                                </span>
+                                            </button>
+                                            <div
+                                                className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                                            >
+                                                <div className="overflow-hidden">
+                                                    <div className="p-4 pt-0 text-dark-text/90 leading-relaxed">
+                                                        <p>{sub.details}</p>
+                                                        {sub.process && (
+                                                            <div className="mt-4 border-t border-accent-lavender pt-4">
+                                                                <ol className="space-y-3">
+                                                                    {sub.process.map((step, stepIndex) => (
+                                                                        <li key={stepIndex} className="flex items-start gap-3">
+                                                                            <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary font-bold text-sm mt-0.5">
+                                                                                {stepIndex + 1}
+                                                                            </div>
+                                                                            <p className="flex-1">{step}</p>
+                                                                        </li>
+                                                                    ))}
+                                                                </ol>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
-        <button
-          onClick={goToPrevious}
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -ml-2 sm:-ml-4 z-10"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button
-          onClick={goToNext}
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/50 hover:bg-white rounded-full p-2 shadow-md -mr-2 sm:-mr-4 z-10"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-          {items.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2.5 h-2.5 rounded-full ${currentIndex === index ? 'bg-primary' : 'bg-primary/30'}`}
-              aria-label={`Go to slide ${index + 1}`}
-            ></button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
-const FlippableCard: React.FC<FlippableCardData> = ({ title, description }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  return (
-    <div
-      className={`flip-card w-full h-64 cursor-pointer ${isFlipped ? 'flipped' : ''}`}
-      onClick={() => setIsFlipped(!isFlipped)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsFlipped(!isFlipped)}}
-      aria-label={`Flippable card: ${title}. Press enter to flip.`}
-    >
-      <div className="flip-card-inner">
-        <div className="flip-card-front bg-accent-blue/40 text-center">
-          <h4 className="text-lg font-bold text-dark-text">{title}</h4>
-        </div>
-        <div className="flip-card-back bg-accent-blue/80 text-center overflow-y-auto">
-          <p className="text-white text-sm">{description}</p>
-        </div>
-      </div>
-    </div>
-  );
+const Tooltip: React.FC<{ text: string; children: React.ReactNode }> = ({ text, children }) => (
+    <span className="relative group inline-block">
+        {children}
+        <span className="absolute hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs p-3 text-sm text-white bg-dark-text/90 rounded-md shadow-lg z-20 backdrop-blur-sm transition-opacity duration-300">
+            {text}
+        </span>
+    </span>
+);
+
+const renderWithTooltips = (text: string) => {
+    const sortedKeys = Object.keys(TOOLTIPS).sort((a, b) => b.length - a.length);
+    const escapedKeys = sortedKeys.map(key => key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const regex = new RegExp(`\\b(${escapedKeys.join('|')})\\b`, 'gi');
+
+    const parts = text.split(regex);
+
+    return (
+        <>
+            {parts.map((part, index) => {
+                const lowerPart = part.toLowerCase();
+                if (TOOLTIPS[lowerPart]) {
+                    return (
+                        <Tooltip key={index} text={TOOLTIPS[lowerPart]}>
+                            <span className="font-semibold border-b border-secondary/60 border-dotted cursor-help">{part}</span>
+                        </Tooltip>
+                    );
+                }
+                return part;
+            })}
+        </>
+    );
 };
 
-const SectionCard: React.FC<SectionCardProps> = ({ title, subtitle, content }) => {
-  return (
-    <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
-      <div className="mb-8">
-        <h2 className="text-3xl font-raleway font-bold text-primary">{title}</h2>
-        <p className="text-dark-text/80 mt-2 font-raleway font-medium">{subtitle}</p>
-      </div>
-      <div className="space-y-8">
-        {content.map((item, index) => (
-          <div key={index}>
-            {item.title && <h3 className="text-xl font-raleway font-semibold text-secondary mb-4">{item.title}</h3>}
-            {item.content && <p className="text-dark-text/90 leading-relaxed mb-4">{item.content}</p>}
+const OperationalProcess: React.FC = () => {
+    const categoryIcons = {
+        'Tarefas': <TaskIcon />,
+        'Pessoas / Funções': <PeopleIcon />,
+        'Informações': <InfoIcon />,
+        'Tecnologias': <TechIcon />,
+    }
 
-            {item.carouselCards && <Carousel items={item.carouselCards} />}
+    return (
+        <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
+            <div className="mb-8">
+                <h2 className="text-3xl font-raleway font-bold text-primary">{sections.marketing.title}</h2>
+                <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.marketing.subtitle}</p>
+            </div>
 
-            {item.points && (
-              <ul className="space-y-3 mt-4 list-disc list-inside text-primary">
-                {item.points.map((point, pIndex) => (
-                  <li key={pIndex} className="text-dark-text/90 leading-relaxed">
-                    <span className="ml-2">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="space-y-12">
+                <div>
+                    <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Processos do Mercado (Customer Development)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {operationalProcess.map(step => (
+                            <div key={step.title} className="bg-white/60 rounded-lg p-5 border border-accent-blue/30 shadow-sm">
+                                <h4 className="font-bold font-raleway text-lg text-dark-text">{step.title}</h4>
+                                <div className="my-3 py-2 px-4 bg-accent-blue/20 rounded-md text-center">
+                                    <p className="font-extrabold text-primary tracking-widest text-sm">{step.action}</p>
+                                </div>
+                                <p className="text-sm text-dark-text/90 mb-4 leading-relaxed">{step.description}</p>
+                                <div className="text-center py-2 bg-secondary/20 rounded-md text-secondary font-bold text-sm">
+                                    {step.result}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
-            {item.flippableCards && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {item.flippableCards.map((card, cardIndex) => (
-                  <FlippableCard key={cardIndex} title={card.title} description={card.description} />
-                ))}
-              </div>
-            )}
+                <div>
+                    <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Matriz das Tarefas Operacionais: Direção × Ambiente</h3>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {tasksMatrix.map(quadrant => (
+                            <div key={quadrant.title} className="bg-white/60 rounded-lg p-5 border border-accent-lavender/40 shadow-sm flex flex-col">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="text-primary">{<quadrant.icon />}</span>
+                                    <h4 className="font-bold font-raleway text-xl text-primary">{quadrant.title}</h4>
+                                </div>
+                                <p className="text-sm text-dark-text/80 italic mb-6">{quadrant.description}</p>
+                                <div className="space-y-4 flex-grow">
+                                    {quadrant.details.map(detail => (
+                                        <div key={detail.category}>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="text-secondary">{categoryIcons[detail.category]}</span>
+                                                <h5 className="font-semibold text-dark-text">{detail.category}</h5>
+                                            </div>
+                                            <p className="text-sm text-dark-text/90 pl-7 leading-relaxed">{renderWithTooltips(detail.items.join(' '))}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
-            {item.category && item.description && (
-              <div className="bg-accent-blue/20 p-4 rounded-lg">
-                <p className="font-semibold text-secondary">{item.category}</p>
-                <p className="text-dark-text/90">{item.description}</p>
-              </div>
-            )}
-            {item.stage && item.action && (
-              <div className="bg-accent-blue/20 p-4 rounded-lg flex flex-col sm:flex-row">
-                <p className="font-bold text-secondary w-full sm:w-1/4">{item.stage}</p>
-                <p className="text-dark-text/90 w-full sm:w-3/4 mt-1 sm:mt-0">{item.action}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    );
 };
+
 
 // =================================================================================
 // MAIN APP COMPONENT
 // =================================================================================
+
 type SectionKey = 'vision' | 'implementation' | 'planning' | 'educators' | 'materials' | 'marketing' | 'ai';
 
 const App: React.FC = () => {
@@ -1101,7 +1096,7 @@ const App: React.FC = () => {
           </ul>
         </nav>
          <div className="absolute bottom-6 left-4 right-4 text-center hidden lg:block">
-            <img src="logoslabirintar/Labirintar_RGB.png" alt="LABirintar Logo" className="h-6 mx-auto opacity-70" />
+            <img src="https://raw.githubusercontent.com/clubesa/clubesa.github.io/main/producao/festivalLabCria/logoslabirintar/Labirintar_RGB.png" alt="LABirintar Logo" className="h-6 mx-auto opacity-70" />
         </div>
       </aside>
 
@@ -1114,18 +1109,19 @@ const App: React.FC = () => {
   );
 };
 
+
 // =================================================================================
 // RENDER APP
 // =================================================================================
 
 const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+    console.error("Target container 'root' not found in the DOM.");
 }
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
