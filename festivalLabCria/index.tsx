@@ -1,11 +1,8 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
 
-// =================================================================================
-// TYPE DEFINITIONS
-// =================================================================================
+// --- START OF TYPES (from types.ts) ---
 
 interface WeeklyPlan {
   week: number;
@@ -86,9 +83,9 @@ interface SectionCardProps {
   content: ContentItem[];
 }
 
-// =================================================================================
-// ICONS & CONSTANTS
-// =================================================================================
+// --- END OF TYPES ---
+
+// --- START OF CONSTANTS (from constants.tsx) ---
 
 const StrategicVisionIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
 const ImplementationIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>;
@@ -119,7 +116,7 @@ const sections = {
   ai: { title: "Assistente de IA para Educadores", subtitle: "Ferramentas de IA para auxiliar os educadores." }
 };
 
-const strategicVision = [
+const strategicVision: ContentItem[] = [
   {
     title: "O que é o Festival LAB Cria?",
     content: "O Festival LAB Cria é um programa extracurricular autoral, desenvolvido pela LABirintar, voltado a adolescentes do Ensino Fundamental II e Ensino Médio. Ele combina a rotina estruturante da LABirintar, os princípios da BNCC e da BNCC Computacional, além de laboratórios criativos. O foco é articular tecnologia, presença e criação significativa com as linguagens dos jogos digitais e da expressão audiovisual, desenvolvendo competências essenciais para o século XXI.",
@@ -271,7 +268,7 @@ const semesterPlan: SemesterCycle[] = [
 
 const planningFinalConsiderations = "Este guia pode ser usado como material de referência viva e em constante adaptação. Cada educador pode documentar, reinterpretar e ajustar as propostas conforme o grupo, o território e os desejos criativos emergentes. A rotina estruturante da LABirintar é uma bússola para o encantamento, a autoria e a autonomia pedagógica.";
 
-const educators = [
+const educators: ContentItem[] = [
   {
     title: "Educadores Curados e Formados",
     content: "A excelência na entrega é garantida por um programa de formação contínua, estruturado em três fases:",
@@ -313,7 +310,7 @@ const educators = [
   }
 ];
 
-const materials = [
+const materials: ContentItem[] = [
     { category: "Guia da Família", description: "Explica o projeto, com sugestões para apoio em casa." },
     { category: "Listas Curadas", description: "Jogos, vídeos, livros e filmes relacionados ao conteúdo." },
     { category: "Desafios e Competições", description: "Indicações de olimpíadas, hackathons e eventos culturais." },
@@ -465,10 +462,9 @@ const TOOLTIPS: { [key: string]: string } = {
     'business developer': 'Profissional responsável por identificar e desenvolver novas oportunidades de negócio.',
     'salesforce mobile': 'Versão móvel do CRM da Salesforce, que permite que equipes de vendas gerenciem suas atividades em campo.',
 };
+// --- END OF CONSTANTS ---
 
-// =================================================================================
-// GEMINI SERVICE
-// =================================================================================
+// --- START OF SERVICES (from geminiService.ts) ---
 
 const getAIAssistance = async (prompt: string): Promise<string> => {
   if (!process.env.API_KEY) {
@@ -499,10 +495,11 @@ const getAIAssistance = async (prompt: string): Promise<string> => {
   }
 };
 
-// =================================================================================
-// COMPONENTS
-// =================================================================================
+// --- END OF SERVICES ---
 
+// --- START OF COMPONENTS ---
+
+// From components/SectionCard.tsx
 const Carousel: React.FC<{ items: CarouselCardData[] }> = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -638,6 +635,7 @@ const SectionCard: React.FC<SectionCardProps> = ({ title, subtitle, content }) =
   );
 };
 
+// From components/SemesterPlan.tsx
 const SemesterPlan: React.FC = () => {
   const [openCycle, setOpenCycle] = useState<number | null>(1);
 
@@ -720,6 +718,7 @@ const SemesterPlan: React.FC = () => {
   );
 };
 
+// From components/AIAssistant.tsx
 const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -854,6 +853,7 @@ const AIAssistant: React.FC = () => {
   );
 };
 
+// From components/ImplementationTimeline.tsx
 const ImplementationTimeline: React.FC = () => {
     const [openSubMilestone, setOpenSubMilestone] = useState<string | null>(null);
 
@@ -929,6 +929,7 @@ const ImplementationTimeline: React.FC = () => {
     );
 };
 
+// From components/OperationalProcess.tsx
 const Tooltip: React.FC<{ text: string; children: React.ReactNode }> = ({ text, children }) => (
     <span className="relative group inline-block">
         {children}
@@ -944,7 +945,7 @@ const renderWithTooltips = (text: string) => {
     const regex = new RegExp(`\\b(${escapedKeys.join('|')})\\b`, 'gi');
 
     const parts = text.split(regex);
-
+    
     return (
         <>
             {parts.map((part, index) => {
@@ -963,7 +964,7 @@ const renderWithTooltips = (text: string) => {
 };
 
 const OperationalProcess: React.FC = () => {
-    const categoryIcons = {
+    const categoryIcons: { [key in MatrixDataDetail['category']]: JSX.Element } = {
         'Tarefas': <TaskIcon />,
         'Pessoas / Funções': <PeopleIcon />,
         'Informações': <InfoIcon />,
@@ -1027,10 +1028,10 @@ const OperationalProcess: React.FC = () => {
     );
 };
 
+// --- END OF COMPONENTS ---
 
-// =================================================================================
-// MAIN APP COMPONENT
-// =================================================================================
+
+// --- START OF APP (from App.tsx) ---
 
 type SectionKey = 'vision' | 'implementation' | 'planning' | 'educators' | 'materials' | 'marketing' | 'ai';
 
@@ -1050,15 +1051,15 @@ const App: React.FC = () => {
   const renderSection = () => {
     switch (activeSection) {
       case 'vision':
-        return <SectionCard title={sections.vision.title} subtitle={sections.vision.subtitle} content={strategicVision} />;
+        return <SectionCard title={sections.vision.title} subtitle={sections.vision.subtitle} content={strategicVision as ContentItem[]} />;
       case 'implementation':
         return <ImplementationTimeline />;
       case 'planning':
         return <SemesterPlan />;
       case 'educators':
-        return <SectionCard title={sections.educators.title} subtitle={sections.educators.subtitle} content={educators} />;
+        return <SectionCard title={sections.educators.title} subtitle={sections.educators.subtitle} content={educators as ContentItem[]} />;
       case 'materials':
-        return <SectionCard title={sections.materials.title} subtitle={sections.materials.subtitle} content={materials} />;
+        return <SectionCard title={sections.materials.title} subtitle={sections.materials.subtitle} content={materials as ContentItem[]} />;
       case 'marketing':
         return <OperationalProcess />;
       case 'ai':
@@ -1109,10 +1110,9 @@ const App: React.FC = () => {
   );
 };
 
+// --- END OF APP ---
 
-// =================================================================================
-// RENDER APP
-// =================================================================================
+// --- RENDER LOGIC ---
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
