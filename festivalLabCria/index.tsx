@@ -1,6 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { GoogleGenAI } from "@google/genai";
+
+
+async function askGemini(prompt: string) {
+  const response = await fetch('http://localhost:3001/ask-gemini', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+  const data = await response.json();
+  return data.text;
+}
 
 // --- START OF TYPES (from types.ts) ---
 
@@ -467,33 +477,23 @@ const TOOLTIPS: { [key: string]: string } = {
 // --- START OF SERVICES (from geminiService.ts) ---
 
 const getAIAssistance = async (prompt: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    return "Desculpe, o assistente de IA não está configurado. A chave da API (API_KEY) do Google precisa ser definida no ambiente.";
-  }
-
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-            systemInstruction: AI_SYSTEM_INSTRUCTION,
-        },
+    const response = await fetch("http://localhost:3001/ask-gemini", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
     });
 
-    return response.text;
+    const data = await response.json();
+    return data.text || "Resposta vazia da IA";
   } catch (error) {
     console.error("Erro ao chamar a API do Gemini:", error);
-    if (error instanceof Error) {
-        if (error.message.includes('API key not valid')) {
-            return 'Ocorreu um erro: A chave da API fornecida não é válida. Por favor, verifique a configuração.';
-        }
-        return `Ocorreu um erro ao contatar o assistente de IA: ${error.message}`;
-    }
-    return "Ocorreu um erro desconhecido ao contatar o assistente de IA.";
+    return "Ocorreu um erro ao contatar o assistente de IA: " + error;
   }
 };
+
 
 // --- END OF SERVICES ---
 
@@ -730,6 +730,14 @@ const AIAssistant: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Estado e função para o botão de teste
+  const [respostaIA, setRespostaIA] = useState<string>("");
+
+  const handlePerguntarIA = async () => {
+    const resposta = await askGemini("Explique o projeto LAB Cria em 3 frases.");
+    setRespostaIA(resposta);
+  };
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -759,10 +767,10 @@ const AIAssistant: React.FC = () => {
   };
 
   const suggestionPrompts = [
-      "Crie um plano de aula para a semana 2 sobre fluxogramas",
-      "Sugira uma atividade de 'quebra-gelo' para adolescentes",
-      "Elabore uma rubrica para avaliar um jogo digital pessoal",
-      "Escreva um e-mail para os pais sobre o projeto final"
+    "Crie um plano de aula para a semana 2 sobre fluxogramas",
+    "Sugira uma atividade de 'quebra-gelo' para adolescentes",
+    "Elabore uma rubrica para avaliar um jogo digital pessoal",
+    "Escreva um e-mail para os pais sobre o projeto final"
   ]
 
   const handleSuggestionClick = (prompt: string) => {
@@ -771,13 +779,28 @@ const AIAssistant: React.FC = () => {
 
   return (
     <div className="bg-white/70 rounded-xl shadow-lg flex flex-col h-[calc(100vh-5rem)] max-h-[800px] backdrop-blur-sm border border-primary/10 animate-fade-in">
-        <div className="p-4 sm:p-6 border-b border-primary/10">
-            <h2 className="text-3xl font-raleway font-bold text-primary flex items-center gap-3">
-                <AIIcon />
-                <span>{sections.ai.title}</span>
-            </h2>
-            <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.ai.subtitle}</p>
-        </div>
+      <div className="p-4 sm:p-6 border-b border-primary/10">
+        <h2 className="text-3xl font-raleway font-bold text-primary flex items-center gap-3">
+          <AIIcon />
+          <span>{sections.ai.title}</span>
+        </h2>
+        <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.ai.subtitle}</p>
+
+        {/* Botão de teste do Gemini */}
+        <button
+          onClick={handlePerguntarIA}
+          className="bg-primary text-white p-2 rounded mt-4"
+        >
+          Testar resposta IA
+        </button>
+
+        {/* Mostra a resposta do botão de teste */}
+        {respostaIA && (
+          <p className="mt-4 text-dark-text">
+            {respostaIA}
+          </p>
+        )}
+      </div>
 
       <div className="flex-grow p-4 sm:p-6 overflow-y-auto">
         <div className="space-y-6">
@@ -801,14 +824,14 @@ const AIAssistant: React.FC = () => {
           ))}
           {isLoading && (
             <div className="flex items-end gap-3">
-                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 text-primary">
-                  <AIIcon />
-                </div>
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 text-primary">
+                <AIIcon />
+              </div>
               <div className="bg-accent-blue/30 p-4 rounded-xl rounded-bl-none">
                 <div className="flex items-center gap-2 text-dark-text/70">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse [animation-delay:0.2s]"></div>
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse [animation-delay:0.4s]"></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse [animation-delay:0.2s]"></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse [animation-delay:0.4s]"></div>
                 </div>
               </div>
             </div>
@@ -816,18 +839,18 @@ const AIAssistant: React.FC = () => {
           <div ref={chatEndRef} />
         </div>
       </div>
-       {messages.length <= 1 && (
+      {messages.length <= 1 && (
         <div className="p-4 sm:p-6 pt-0">
-            <p className="text-dark-text/70 mb-3 text-sm">Sugestões:</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {suggestionPrompts.map(prompt => (
-                    <button key={prompt} onClick={() => handleSuggestionClick(prompt)} className="text-left text-sm bg-accent-lavender/40 hover:bg-accent-lavender/60 text-dark-text/80 p-3 rounded-lg transition-colors duration-200">
-                        {prompt}
-                    </button>
-                ))}
-            </div>
+          <p className="text-dark-text/70 mb-3 text-sm">Sugestões:</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {suggestionPrompts.map(prompt => (
+              <button key={prompt} onClick={() => handleSuggestionClick(prompt)} className="text-left text-sm bg-accent-lavender/40 hover:bg-accent-lavender/60 text-dark-text/80 p-3 rounded-lg transition-colors duration-200">
+                {prompt}
+              </button>
+            ))}
+          </div>
         </div>
-        )}
+      )}
 
       <div className="p-4 sm:p-6 border-t border-primary/10">
         <form onSubmit={handleSubmit} className="flex gap-4">
@@ -852,6 +875,7 @@ const AIAssistant: React.FC = () => {
     </div>
   );
 };
+
 
 // From components/ImplementationTimeline.tsx
 const ImplementationTimeline: React.FC = () => {
