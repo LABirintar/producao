@@ -1006,6 +1006,66 @@ const OperationalProcess: React.FC = () => {
     }
 
     return (
+  <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
+    <div className="mb-8">
+      <h2 className="text-3xl font-raleway font-bold text-primary">{sections.marketing.title}</h2>
+      <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.marketing.subtitle}</p>
+    </div>
+
+    <div className="space-y-12">
+      <div>
+        <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Processos do Mercado (Customer Development)</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {operationalProcess.map(step => (
+            <div key={step.title} className="bg-white/60 rounded-lg p-5 border border-accent-blue/30 shadow-sm flex flex-col justify-between h-full">
+              <div>
+                <h4 className="font-bold font-raleway text-lg text-dark-text">{step.title}</h4>
+                <div className="my-3 py-2 px-4 bg-accent-blue/20 rounded-md text-center">
+                  <p className="font-extrabold text-primary tracking-widest text-sm">{step.action}</p>
+                </div>
+                <p className="text-sm text-dark-text/90 mb-4 leading-relaxed">{step.description}</p>
+              </div>
+              <div className="text-center py-2 bg-secondary/20 rounded-md text-secondary font-bold text-sm mt-auto">
+                {step.result}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-2xl font-raleway font-semibold text-secondary mb-6">Matriz das Tarefas Operacionais: Direção × Ambiente</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {tasksMatrix.map(quadrant => (
+            <div key={quadrant.title} className="bg-white/60 rounded-lg p-5 border border-accent-lavender/40 shadow-sm flex flex-col">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-primary">{<quadrant.icon />}</span>
+                <h4 className="font-bold font-raleway text-xl text-primary">{quadrant.title}</h4>
+              </div>
+              <p className="text-sm text-dark-text/80 italic mb-6">{quadrant.description}</p>
+              <div className="space-y-4 flex-grow">
+                {quadrant.details.map(detail => (
+                  <div key={detail.category}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-secondary">{categoryIcons[detail.category]}</span>
+                      <h5 className="font-semibold text-dark-text">{detail.category}</h5>
+                    </div>
+                    <p className="text-sm text-dark-text/90 pl-7 leading-relaxed">
+                      {renderWithTooltips(detail.items.join(' '))}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+    /* CASO PRECISE VOLTAR COMO ERA ANTES 
+    return (
         <div className="bg-white/70 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm border border-primary/10 animate-fade-in">
             <div className="mb-8">
                 <h2 className="text-3xl font-raleway font-bold text-primary">{sections.marketing.title}</h2>
@@ -1059,7 +1119,7 @@ const OperationalProcess: React.FC = () => {
 
             </div>
         </div>
-    );
+    );*/
 };
 
 // --- END OF COMPONENTS ---
