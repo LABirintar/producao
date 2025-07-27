@@ -1,0 +1,15 @@
+# Ignorar dependências
+node_modules/
+geminiBackend/node_modules/
+
+# Build do React (se tiver)
+frontend/build/
+festivalLabCria/build/
+
+# Arquivos de ambiente
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
