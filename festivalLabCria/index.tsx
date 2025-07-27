@@ -3,13 +3,25 @@ import ReactDOM from 'react-dom/client';
 
 
 async function askGemini(prompt: string) {
-  const response = await fetch('http://localhost:3001/ask-gemini', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt })
-  });
-  const data = await response.json();
-  return data.text;
+  try {
+    const response = await fetch('https://assistente-vmv2jjnpua-uc.a.run.app', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro da API: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.text;
+  } catch (error) {
+    console.error("Erro ao chamar o assistente:", error);
+    return "Desculpe, ocorreu um erro ao tentar gerar a resposta.";
+  }
 }
 
 // --- START OF TYPES (from types.ts) ---
@@ -478,12 +490,10 @@ const TOOLTIPS: { [key: string]: string } = {
 
 const getAIAssistance = async (prompt: string): Promise<string> => {
   try {
-    const response = await fetch("http://localhost:3001/ask-gemini", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt }),
+    const response = await fetch("https://assistente-vmv2jjnpua-uc.a.run.app", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
     });
 
     const data = await response.json();
