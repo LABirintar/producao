@@ -1191,7 +1191,7 @@ const App: React.FC = () => {
           </ul>
         </nav>
          <div className="absolute bottom-6 left-4 right-4 text-center hidden lg:block">
-            <img src="../logoslabirintar/Logo2.png" alt="LABirintar Logo" className="h-14 mx-auto opacity-100" />
+            <img src="../logosLabirintar/Logo2.png" alt="LABirintar Logo" className="h-14 mx-auto opacity-100" />
         </div>
       </aside>
 
