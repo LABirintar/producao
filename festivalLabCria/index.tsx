@@ -110,12 +110,6 @@ interface SectionCardProps {
 // --- START OF CONSTANTS (from constants.tsx) ---
 
 const StrategicVisionIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
-const ImplementationIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>;
-const PlanningIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
-const EducatorsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-1a6 6 0 00-5.176-5.97M15 21H9" /></svg>;
-const MaterialsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" /></svg>;
-const MarketingIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.356a1.76 1.76 0 013.417-.592zM11 5.882V5.882a1.76 1.76 0 012.854.918l2.147 6.356a1.76 1.76 0 01-3.417.592l-2.147-6.356a1.76 1.76 0 01.563-1.51z" /></svg>;
-const AIIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>;
 const ObjectivesIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
 const ContentIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>;
 const SkillsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3m6-9h3m-3 6h3M3 12h3m0 0h12" /></svg>;
@@ -134,6 +128,7 @@ const sections = {
   planning: { title: "Planejamento Pedagógico Semestral", subtitle: "Uma jornada interativa de 16 semanas de criação e descoberta." },
   educators: { title: "Educadores, Avaliação e Qualidade", subtitle: "A excelência na entrega é garantida por um programa de formação contínua." },
   materials: { title: "Materiais, Comunicação e Estratégia", subtitle: "Apoios para a Escola e Comunidade." },
+  pricing: { title: "Precificação", subtitle: "Valor mensal e estrutura de atendimento do programa." },
   marketing: { title: "Processo Operacional", subtitle: "Sugestão de processo operacional com base em desenvolvimento ágil de clientes." },
   ai: { title: "Assistente de IA para Educadores", subtitle: "Ferramentas de IA para auxiliar os educadores." }
 };
@@ -340,6 +335,31 @@ const materials: ContentItem[] = [
     { category: "Aspectos Legais e Regulatórios", description: "Alinhamento com LGPD, PNE, uso responsável de tecnologia." },
     { category: "Recursos Técnicos e Parceiros", description: "Parcerias com festivais, projetos, estúdios e provedores." },
 ];
+
+const pricing: ContentItem[] = [
+  {
+    title: "Laboratório Cria",
+    content: (
+      <div className="bg-white/60 border border-accent-blue/30 rounded-xl p-6 shadow-md w-full max-w-md">
+        <div className="space-y-3">
+          <p className="text-dark-text font-medium text-base">
+            1x por semana – 1 hora e meia
+          </p>
+          <p className="text-dark-text font-medium text-base">
+            2 experiências de 45 minutos
+          </p>
+          <p className="text-dark-text font-medium text-base">
+            2 turmas simultâneas que se revezam
+          </p>
+          <p className="text-2xl font-extrabold text-primary mt-4">
+            R$245<span className="text-base font-medium">/mês</span>
+          </p>
+        </div>
+      </div>
+    )
+  }
+];
+
 
 const operationalProcess: ProcessStep[] = [
     {
@@ -791,7 +811,6 @@ const AIAssistant: React.FC = () => {
     <div className="bg-white/70 rounded-xl shadow-lg flex flex-col h-[calc(100vh-5rem)] max-h-[800px] backdrop-blur-sm border border-primary/10 animate-fade-in">
       <div className="p-4 sm:p-6 border-b border-primary/10">
         <h2 className="text-3xl font-raleway font-bold text-primary flex items-center gap-3">
-          <AIIcon />
           <span>{sections.ai.title}</span>
         </h2>
         <p className="text-dark-text/80 mt-2 font-raleway font-medium">{sections.ai.subtitle}</p>
@@ -818,7 +837,6 @@ const AIAssistant: React.FC = () => {
             <div key={index} className={`flex items-end gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
               {msg.role === 'model' && (
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 text-primary">
-                  <AIIcon />
                 </div>
               )}
               <div
@@ -835,7 +853,6 @@ const AIAssistant: React.FC = () => {
           {isLoading && (
             <div className="flex items-end gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 text-primary">
-                <AIIcon />
               </div>
               <div className="bg-accent-blue/30 p-4 rounded-xl rounded-bl-none">
                 <div className="flex items-center gap-2 text-dark-text/70">
@@ -1133,13 +1150,14 @@ const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionKey>('vision');
 
   const navItems = [
-    { key: 'vision', icon: <StrategicVisionIcon />, text: 'Visão Estratégica' },
-    { key: 'implementation', icon: <ImplementationIcon />, text: 'Implementação' },
-    { key: 'planning', icon: <PlanningIcon />, text: 'Planejamento' },
-    { key: 'educators', icon: <EducatorsIcon />, text: 'Educadores' },
-    { key: 'materials', icon: <MaterialsIcon />, text: 'Materiais' },
-    { key: 'marketing', icon: <MarketingIcon />, text: 'Processo Operacional' },
-    { key: 'ai', icon: <AIIcon />, text: 'Assistente IA' },
+    { key: 'vision', text: 'Visão Estratégica' },
+    { key: 'implementation', text: 'Implementação' },
+    { key: 'planning', text: 'Planejamento' },
+    { key: 'educators', text: 'Educadores' },
+    { key: 'materials', text: 'Materiais' },
+    { key: 'pricing', text: 'Precificação' },
+    { key: 'marketing', text: 'Processo Operacional' },
+    { key: 'ai', text: 'Assistente IA' },
   ];
 
   const renderSection = () => {
@@ -1154,6 +1172,8 @@ const App: React.FC = () => {
         return <SectionCard title={sections.educators.title} subtitle={sections.educators.subtitle} content={educators as ContentItem[]} />;
       case 'materials':
         return <SectionCard title={sections.materials.title} subtitle={sections.materials.subtitle} content={materials as ContentItem[]} />;
+      case 'pricing':
+        return <SectionCard title={sections.pricing.title} subtitle={sections.pricing.subtitle} content={pricing as ContentItem[]} />;
       case 'marketing':
         return <OperationalProcess />;
       case 'ai':
