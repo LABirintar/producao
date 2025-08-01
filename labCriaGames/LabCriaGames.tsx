@@ -469,31 +469,18 @@ const TOOLTIPS: { [key: string]: string } = {
 // --- START OF SERVICES (from geminiService.ts) ---
 
 const getAIAssistance = async (prompt: string): Promise<string> => {
-  if (!process.env.API_KEY) {
-    return "Desculpe, o assistente de IA não está configurado. A chave da API (API_KEY) do Google precisa ser definida no ambiente.";
-  }
-
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-            systemInstruction: AI_SYSTEM_INSTRUCTION,
-        },
+    const response = await fetch("https://assistente-vmv2jjnpua-uc.a.run.app", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
     });
 
-    return response.text;
+    const data = await response.json();
+    return data.text || "Resposta vazia da IA";
   } catch (error) {
     console.error("Erro ao chamar a API do Gemini:", error);
-    if (error instanceof Error) {
-        if (error.message.includes('API key not valid')) {
-            return 'Ocorreu um erro: A chave da API fornecida não é válida. Por favor, verifique a configuração.';
-        }
-        return `Ocorreu um erro ao contatar o assistente de IA: ${error.message}`;
-    }
-    return "Ocorreu um erro desconhecido ao contatar o assistente de IA.";
+    return "Ocorreu um erro ao contatar o assistente de IA: " + error;
   }
 };
 
@@ -726,12 +713,20 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'model',
-      text: 'Olá! Sou seu assistente pedagógico para o LAB Cria Games. Como posso ajudar a planejar suas aulas com Construct 3, criar atividades ou desenvolver rubricas hoje?',
+      text: 'Olá! Sou seu assistente pedagógico para o Festival LAB Cria. Como posso ajudar você a planejar suas aulas, criar atividades ou desenvolver rubricas hoje?',
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Estado e função para o botão de teste
+  const [respostaIA, setRespostaIA] = useState<string>("");
+
+  const handlePerguntarIA = async () => {
+    const resposta = await askGemini("Explique o projeto LAB Cria em 3 frases.");
+    setRespostaIA(resposta);
+  };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
