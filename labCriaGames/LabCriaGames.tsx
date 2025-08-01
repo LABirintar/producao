@@ -1,7 +1,28 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { GoogleGenAI } from "@google/genai";
+
+async function askGemini(prompt: string) {
+  try {
+    const response = await fetch('https://assistente-vmv2jjnpua-uc.a.run.app', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro da API: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.text;
+  } catch (error) {
+    console.error("Erro ao chamar o assistente:", error);
+    return "Desculpe, ocorreu um erro ao tentar gerar a resposta.";
+  }
+}
 
 // --- START OF TYPES (from types.ts) ---
 
@@ -102,33 +123,34 @@ const PillarsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4
 const ChevronDownIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>);
 
 const sections = {
-  vision: { title: "Fundamentos e Visão Estratégica", subtitle: "Construindo competências do século XXI através da criação de jogos." },
+  vision: { title: "Pilares e Visão Estratégica", subtitle: "Construindo competências do século XXI através da criação de jogos." },
   implementation: { title: "Guia de Implementação e Gestão", subtitle: "Do planejamento à execução, um roteiro para o sucesso." },
   planning: { title: "O Guia do Educador: Prática Pedagógica", subtitle: "Sequências didáticas, metodologias e ferramentas para a sala de aula." },
   educators: { title: "Nossos Educadores, Avaliação e Qualidade", subtitle: "Conheça quem faz a diferença e como medimos o sucesso." },
   materials: { title: "Materiais, Comunicação e Estratégia", subtitle: "Apoios para a Escola e Comunidade." },
-  marketing: { title: "Estratégia, Desafios e Diferenciais", subtitle: "Entendendo o posicionamento e os pontos fortes do LAB Cria Games." },
+  pricing: { title: "Precificação", subtitle: "Valor mensal e estrutura de atendimento do programa." },
+  marketing: { title: "Estratégia, Desafios e Diferenciais", subtitle: "Entendendo os posicionamentos e as potências do LAB Cria Games." },
   ai: { title: "Assistente de IA para Educadores", subtitle: "Ferramentas de IA para auxiliar os educadores." }
 };
 
 const strategicVision: ContentItem[] = [
   {
     title: "Apresentação do Produto: A Proposta de Valor",
-    content: "O LAB Cria Games é uma solução educacional extracurricular desenhada para capacitar adolescentes com competências essenciais do século XXI. O propósito é desenvolver pensamento crítico, criatividade e colaboração através da criação de jogos digitais. O programa foca exclusivamente na criação de jogos 2D, onde os alunos aprendem a transformar objetos do mundo físico em elementos de um game, utilizando a ferramenta Construct 3. A proposta é oferecer uma experiência transformadora, onde a tecnologia serve como linguagem para a autoria e expressão.",
+    content: "O LAB Cria Games é uma solução educacional extracurricular para engajar adolescentes e jovens. O propósito é desenvolver pensamento crítico, criatividade e colaboração através da criação de jogos digitais. O programa foca na criação de jogos 2D, onde os alunos aprendem a transformar objetos do mundo físico em elementos de um game, utilizando a ferramenta Construct 3. A proposta é oferecer uma experiência transformadora, onde a tecnologia serve como linguagem para a autoria e expressão.",
   },
   {
     title: "Estrutura do Manual",
     content: "Para máxima clareza, este manual está organizado em quatro partes lógicas, concebidas para consulta conforme as necessidades de cada profissional da escola:",
     carouselCards: [
-        { title: "Parte I: Fundamentos e Visão Estratégica", description: "Detalha a filosofia, justificativa e objetivos do programa. Essencial para gestores e coordenadores." },
+        { title: "Parte I: Pilares e Visão Estratégica", description: "Detalha a filosofia, justificativa e objetivos do programa. Essencial para gestores." },
         { title: "Parte II: Guia de Implementação e Gestão", description: "Oferece o 'como fazer' da implementação, incluindo plano passo a passo e requisitos de infraestrutura." },
         { title: "Parte III: O Guia do Educador", description: "O coração prático do manual, focado no professor, com sequências didáticas, metodologias e ferramentas de avaliação." },
-        { title: "Parte IV: Recursos e Suporte", description: "Uma rede de apoio com o guia da plataforma digital, biblioteca de recursos, glossário e contatos de suporte." },
+        { title: "Parte IV: Materiais", description: "Uma rede de apoio com um Guia da Família, Listas Curadas, Desafios e Eventos, Glossários de Termos, Aspectos legais e Regulatórios e Recursos técnicos e Parceiros." },
     ]
   },
   {
     title: "Justificativa e Relevância: Resolvendo um Problema Real",
-    content: "O LAB Cria Games busca preencher lacunas na educação, abordando o desinteresse dos adolescentes em atividades tradicionais e a necessidade de habilidades digitais. A proposta de valor transcende a comercialização, focando em 'honrar as juventudes' e oferecer um caminho para a autoria e autonomia. O programa alinha-se à BNCC, promovendo letramento digital e pensamento computacional de forma significativa e engajadora.",
+    content: "O LAB Cria Games busca apoiar a resolução de dores como o desinteresse dos adolescentes em atividades extracurriculares e a necessidade de habilidades digitais. A proposta de valor transcende a comercialização, focando em 'honrar as juventudes' e oferecer um caminho para a autoria e autonomia. O programa alinha-se à BNCC, promovendo letramento digital e pensamento computacional de forma significativa e engajadora.",
     flippableCards: [
         { title: "Pensamento Computacional", description: "Alunos desenvolvem lógica, abstração e resolução de problemas ao projetar as mecânicas e regras de seus jogos." },
         { title: "Cultura Maker & Autoria", description: "A metodologia 'mão na massa' incentiva os alunos a criar seus próprios projetos do zero, transformando ideias em produtos digitais autorais." },
@@ -139,7 +161,7 @@ const strategicVision: ContentItem[] = [
 
 const implementationTimeline: Milestone[] = [
   {
-    title: "1. Diagnóstico e Engajamento",
+    title: "Diagnóstico e Engajamento",
     subMilestones: [
       {
         title: "Venda Consultiva e Diagnóstico",
@@ -152,11 +174,11 @@ const implementationTimeline: Milestone[] = [
     ]
   },
   {
-    title: "2. Onboarding e Gestão",
+    title: "Onboarding e Gestão",
     subMilestones: [
        {
         title: "Matrículas e Gestão Automatizada",
-        details: "A LABirintar oferece um software proprietário que automatiza todo o processo de gestão do extracurricular: matrículas online, fluxo financeiro com gateway de pagamento, check-in de presença e comunicação centralizada, reduzindo a carga operacional da escola.",
+        details: "A LABirintar oferece um software proprietário que automatiza todo o processo de gestão do extracurricular: matrículas online, fluxo financeiro com gateway de pagamento, check-in de presença dos educadores e comunicação centralizada, reduzindo a carga operacional da escola.",
       },
       {
         title: "Alocação e Formação de Educadores",
@@ -171,24 +193,24 @@ const implementationTimeline: Milestone[] = [
       },
        {
         title: "Infraestrutura e Lançamento do Programa",
-        details: "Apoiamos a escola na preparação para o primeiro dia de aulas com um checklist final, que abrange desde a configuração dos espaços e tecnologia (computadores com Construct 3, câmeras/celulares) até a confirmação do acesso de todos à plataforma.",
+        details: "Apoiamos a escola na preparação para o primeiro dia de aulas com  atividades de engajamento, apoio na captação e execução das matrículas, um checklist final, que abrange desde a configuração dos espaços e tecnologia (computadores com Construct 3, câmeras, etc) até a confirmação do acesso de todos à plataforma.",
        }
     ]
   },
   {
-    title: "3. Execução, Suporte e Celebração",
+    title: "Execução, Suporte e Celebração",
     subMilestones: [
         {
-          title: "Vivência Criativa e Integração com o PPP",
-          details: "Durante 16 semanas, os alunos criam seus jogos autorais. O programa é desenhado para se integrar harmoniosamente ao Projeto Político-Pedagógico (PPP) da escola, enriquecendo a oferta curricular e desenvolvendo competências do século XXI.",
+          title: "Integração à BNCC",
+          details: "Durante 16 semanas, os alunos criam seus jogos autorais. O programa é desenhado para se integrar harmoniosamente ao BNCC e BNCC Computacional, enriquecendo a oferta curricular e desenvolvendo competências do século XXI.",
         },
         {
-          title: "Suporte Contínuo",
-          details: "A LABirintar oferece suporte contínuo nas áreas pedagógica, técnica e administrativa, com canais de comunicação claros e tempos de resposta definidos (SLA) para garantir uma parceria de longo prazo bem-sucedida."
+          title: "Acompanhamento contínuo",
+          details: "A LABirintar oferece acompanhamento contínuo nas áreas pedagógica, técnica e administrativa, com canais de comunicação claros e tempos de resposta definidos para garantir uma parceria de longo prazo bem-sucedida."
         },
         {
-          title: "Mostra de Criadores e Portfólio Digital",
-          details: "As produções são celebradas em uma 'Mostra de Criadores'. Os projetos são exibidos para a comunidade, e os alunos recebem certificados, construindo um portfólio digital de suas criações autorais.",
+          title: "Mostra e Portfólio Digital",
+          details: "As produções são celebradas em uma Mostra. Os projetos são exibidos para a comunidade, e os alunos recebem certificados, construindo um portfólio digital de suas criações autorais.",
         }
     ]
   }
@@ -293,10 +315,28 @@ const educators: ContentItem[] = [
 const materials: ContentItem[] = [
     { category: "Guia da Família", description: "Explica o projeto, com sugestões para apoio em casa." },
     { category: "Listas Curadas", description: "Jogos, vídeos, livros e filmes relacionados ao conteúdo." },
-    { category: "Desafios e Competições", description: "Indicações de olimpíadas, hackathons e eventos culturais." },
+    { category: "Desafios e Competições", description: "Indicações de olimpíadas, game jams e eventos culturais." },
     { category: "Glossário de Termos", description: "Vocabulário acessível (rubrica, gamificação, BNCC, etc.)" },
-    { category: "Aspectos Legais e Regulatórios", description: "Alinhamento com LGPD, PNE, uso responsável de tecnologia." },
-    { category: "Recursos Técnicos e Parceiros", description: "Parcerias com festivais, projetos, estúdios e provedores." },
+    { category: "Aspectos Legais e Regulatórios", description: "Alinhamento com LGPD, ECA, PNE, uso responsável de tecnologia." },
+    { category: "Recursos Técnicos e Parceiros", description: "Parcerias com projetos, estúdios e provedores." },
+];
+
+const pricing: ContentItem[] = [
+  {
+    title: "LAB Cria Games",
+    content: (
+      <div className="bg-white/60 border border-accent-blue/30 rounded-xl p-6 shadow-md w-full max-w-md">
+        <div className="space-y-3">
+          <p className="text-dark-text font-medium text-base">
+            1x por semana – 1 hora
+          </p>
+          <p className="text-2xl font-extrabold text-primary mt-4">
+            R$190<span className="text-base font-medium">/mês</span>
+          </p>
+        </div>
+      </div>
+    )
+  }
 ];
 
 const strategyAndDifferentials: ContentItem[] = [
@@ -354,32 +394,75 @@ const strategyAndDifferentials: ContentItem[] = [
     }
 ];
 
-const AI_SYSTEM_INSTRUCTION = `You are a world-class pedagogical assistant for the 'LAB Cria Games' program.
-This program, developed by LABirintar in partnership with 8Bits, is an extracurricular course for middle school students (Ensino Fundamental 2) in Brazil. It focuses exclusively on creating 2D digital games using the Construct 3 platform.
-The core pedagogical concept is to transform physical objects (created via drawing, Lego, or everyday items) into digital assets for a game.
-
+const AI_SYSTEM_INSTRUCTION = `You are a world-class pedagogical assistant for the 'Festival LAB Cria' program.
+This program, developed by LABirintar, is an extracurricular course for middle and high school students in Brazil, focusing on digital game creation and audiovisual expression.
 Your primary role is to assist educators by providing creative and practical resources that align with the program's core principles.
 
 Core Principles to follow:
-1.  **Product Focus:** The product is "LAB Cria Games". There is no audiovisual component.
-2.  **Tools:** The primary tool is Construct 3 (free version). Students will also use cameras/phones to capture images of physical objects.
-3.  **Methodology:** Emphasize Project-Based Learning and Maker Culture. Students learn by doing, with a focus on authoring their own games. Creation is mostly individual.
-4.  **Alignment with BNCC:** All content must be aligned with Brazil's Base Nacional Comum Curricular (BNCC), particularly focusing on digital literacy and computational thinking.
-5.  **Engaging Content:** Create materials that are relevant and exciting for teenagers, giving them creative freedom.
-6.  **Structure:** The program is a one-semester course with weekly 1-hour sessions. The content is structured to guide students from physical creation to a finished 2D game.
+1.  **Alignment with BNCC:** All content must be aligned with Brazil's Base Nacional Comum Curricular (BNCC) and the BNCC Computacional.
+2.  **Project-Based Learning:** Focus on hands-on, creative projects where students build their own games and videos.
+3.  **21st Century Skills:** Emphasize creativity, logical reasoning, digital fluency, collaboration, and youth protagonism.
+4.  **Engaging Content:** Create materials that are relevant and exciting for teenagers.
+5.  **Structure:** The program is divided into 4 cycles of 4 weeks each. Your suggestions should ideally fit this structure.
 
 Your tasks include:
-- Generating detailed lesson plans for the 16-week semester.
-- Creating engaging activities, challenges, and "ice-breakers".
-- Developing assessment rubrics for the games created.
-- Drafting communication models for parents and the school community.
-- Suggesting physical materials (Lego, art supplies) for activities.
-
-Key People:
-- Gustavo (8Bits): The main concept designer of the course.
-- Marcos and Everton (LABirintar): The lead educators for the initial classes. Marcos is deeply involved in LABirintar's tech platform.
+- Generating detailed lesson plans.
+- Creating activities and challenges.
+- Developing assessment rubrics.
+- Drafting communication models for parents (e.g., emails, updates).
+- Finding and adapting content from a Digital Asset Management (DAM) system (you can simulate this by suggesting types of assets).
 
 Always respond in Portuguese (Brazil). Be encouraging, clear, and inspiring in your tone.`;
+
+const TOOLTIPS: { [key: string]: string } = {
+    'seo': 'Search Engine Optimization (Otimização para Mecanismos de Busca): Conjunto de técnicas para melhorar o posicionamento de um site em resultados de busca como o Google.',
+    'blog': 'Site ou página online, atualizada com frequência, onde se publicam artigos, posts ou outros conteúdos sobre um tema específico.',
+    'site institucional': 'O site oficial de uma empresa ou organização, contendo informações sobre seus produtos, serviços e história.',
+    'marketing de afiliados': 'Modelo de marketing onde uma empresa paga comissão a parceiros (afiliados) por cada cliente ou venda gerada através da divulgação do afiliado.',
+    'marketing viral': 'Técnica de marketing que explora redes sociais para produzir aumentos exponenciais em conhecimento de marca, através de compartilhamento.',
+    'redes sociais': 'Plataformas online como Instagram, Facebook, TikTok, etc., usadas para interação social e compartilhamento de conteúdo.',
+    'inbound ads': 'Anúncios pagos que se integram a uma estratégia de Inbound Marketing, aparecendo para usuários que já demonstraram interesse em um tópico relacionado.',
+    'webinars': 'Seminários ou conferências online, geralmente interativos, usados para educar e engajar um público sobre um tópico específico.',
+    'e-mail marketing automatizado': 'Envio de e-mails de forma automática para uma lista de contatos, com base em gatilhos ou segmentações pré-definidas.',
+    'content marketer': 'Profissional responsável por criar e distribuir conteúdo valioso e relevante para atrair e reter um público-alvo.',
+    'seo specialist': 'Especialista focado em otimizar sites para que apareçam nas primeiras posições dos motores de busca.',
+    'social media manager': 'Profissional que gerencia a presença e as estratégias de uma marca nas redes sociais.',
+    'web analyst': 'Profissional que analisa dados de tráfego e comportamento de usuários em um site para otimizar a experiência e os resultados.',
+    'cms': 'Content Management System (Sistema de Gerenciamento de Conteúdo): Software que permite criar, editar e gerenciar conteúdo digital, como o WordPress.',
+    'wordpress': 'Uma das plataformas CMS mais populares do mundo, usada para criar blogs, sites e lojas virtuais.',
+    'hubspot': 'Plataforma completa de software para marketing, vendas e atendimento ao cliente.',
+    'ahrefs': 'Ferramenta de SEO usada para análise de backlinks, pesquisa de palavras-chave e análise de concorrentes.',
+    'semrush': 'Ferramenta de marketing digital para análise de SEO, pesquisa de palavras-chave, marketing de conteúdo e análise de concorrência.',
+    'mailchimp': 'Plataforma de automação de marketing e serviço de e-mail marketing.',
+    'rd station': 'Plataforma brasileira líder em automação de marketing e vendas.',
+    'google analytics': 'Serviço do Google que monitora e analisa o tráfego de sites.',
+    'crm': 'Customer Relationship Management (Gestão de Relacionamento com o Cliente): Software para gerenciar as interações de uma empresa com clientes e prospects.',
+    'indicações boca a boca': 'Recomendações feitas por clientes satisfeitos a seus amigos, familiares e contatos.',
+    'relações públicas': 'Atividades de comunicação para construir e manter uma imagem positiva da marca junto ao público.',
+    'networking espontâneo': 'Criação de redes de contatos profissionais de forma natural e não planejada, geralmente em eventos ou encontros sociais.',
+    'key account manager': 'Gerente de Contas Estratégicas, responsável por gerenciar e desenvolver relacionamentos com os clientes mais importantes da empresa.',
+    'cold e-mails': 'Envio de e-mails para prospects com os quais não houve contato prévio, como uma forma de prospecção ativa.',
+    'sem/ppc': 'Search Engine Marketing / Pay-Per-Click: Marketing em mecanismos de busca, geralmente através de anúncios pagos onde o anunciante paga por clique.',
+    'social selling': 'Uso de redes sociais para encontrar, conectar, entender e nutrir prospects, desenvolvendo um relacionamento que pode levar à venda.',
+    'linkedin outreach': 'Estratégia de prospecção ativa utilizando a plataforma LinkedIn para contatar potenciais clientes.',
+    'whatsapp comercial': 'Versão do WhatsApp para empresas, com recursos para automação, organização e resposta rápida a clientes.',
+    'remarketing digital': 'Estratégia de exibir anúncios para usuários que já visitaram seu site ou interagiram com sua marca anteriormente.',
+    'sdr': 'Sales Development Representative: Profissional de vendas focado na prospecção e qualificação de leads, preparando-os para a equipe de vendas.',
+    'growth marketer': 'Profissional focado em estratégias e táticas de crescimento rápido para o negócio, usando marketing, dados e tecnologia.',
+    'paid ads specialist': 'Especialista em criar e gerenciar campanhas de anúncios pagos em plataformas como Google Ads e redes sociais.',
+    'inside sales': 'Modelo de vendas realizado remotamente, de dentro do escritório, utilizando telefone, e-mail e outras ferramentas digitais.',
+    'lemlist': 'Ferramenta para automação de cold e-mails, focada em personalização para aumentar as taxas de resposta.',
+    'outreach.io': 'Plataforma de engajamento de vendas que ajuda equipes a automatizar e otimizar a prospecção.',
+    'google ads': 'Plataforma de publicidade do Google, onde anunciantes pagam para exibir anúncios para usuários da web.',
+    'cold calls': 'Ligações telefônicas para potenciais clientes que não tiveram contato prévio com a empresa.',
+    'visitas comerciais presenciais': 'Reuniões face a face com potenciais clientes para apresentar produtos ou serviços.',
+    'mala direta': 'Envio de material publicitário físico (cartas, folhetos) para o endereço de clientes ou prospects.',
+    'vendedor externo': 'Profissional de vendas que atua fora do escritório, visitando clientes em campo (Field Sales).',
+    'field sales': 'Vendas em campo, onde o vendedor visita fisicamente os clientes e prospects.',
+    'telemarketing': 'Marketing direto onde um vendedor solicita a potenciais clientes que comprem produtos ou serviços, por telefone.',
+    'business developer': 'Profissional responsável por identificar e desenvolver novas oportunidades de negócio.',
+    'salesforce mobile': 'Versão móvel do CRM da Salesforce, que permite que equipes de vendas gerenciem suas atividades em campo.',
+};
 
 // --- END OF CONSTANTS ---
 
@@ -682,7 +765,7 @@ const AIAssistant: React.FC = () => {
       "Crie um plano de aula para a semana 9 sobre movimento do jogador",
       "Sugira uma atividade 'quebra-gelo' usando objetos do cotidiano",
       "Elabore uma rubrica para avaliar um jogo 2D feito no Construct 3",
-      "Escreva um e-mail para os pais sobre a Mostra de Criadores no final do semestre"
+      "Escreva um e-mail para os pais sobre a Mostra"
   ]
 
   const handleSuggestionClick = (prompt: string) => {
@@ -860,13 +943,14 @@ const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionKey>('vision');
 
   const navItems = [
-    { key: 'vision', icon: <StrategicVisionIcon />, text: 'Visão Estratégica' },
-    { key: 'implementation', icon: <ImplementationIcon />, text: 'Implementação' },
-    { key: 'planning', icon: <PlanningIcon />, text: 'Guia do Educador' },
-    { key: 'educators', icon: <EducatorsIcon />, text: 'Educadores' },
-    { key: 'materials', icon: <MaterialsIcon />, text: 'Materiais' },
-    { key: 'marketing', icon: <MarketingIcon />, text: 'Estratégia' },
-    { key: 'ai', icon: <AIIcon />, text: 'Assistente IA' },
+    { key: 'vision',text: 'Visão do Produto' },
+    { key: 'implementation', text: 'Implementação' },
+    { key: 'planning', text: 'Guia do Educador' },
+    { key: 'educators', text: 'Educadores' },
+    { key: 'materials', text: 'Materiais' },
+    { key: 'pricing', text: 'Precificação' },
+    { key: 'marketing',text: 'Estratégia' },
+    { key: 'ai',text: 'Assistente IA' },
   ];
 
   const renderSection = () => {
@@ -881,6 +965,8 @@ const App: React.FC = () => {
         return <SectionCard title={sections.educators.title} subtitle={sections.educators.subtitle} content={educators as ContentItem[]} />;
       case 'materials':
         return <SectionCard title={sections.materials.title} subtitle={sections.materials.subtitle} content={materials as ContentItem[]} />;
+      case 'pricing':
+        return <SectionCard title={sections.pricing.title} subtitle={sections.pricing.subtitle} content={pricing as ContentItem[]} />;
       case 'marketing':
         return <SectionCard title={sections.marketing.title} subtitle={sections.marketing.subtitle} content={strategyAndDifferentials as ContentItem[]} />;
       case 'ai':
@@ -918,7 +1004,7 @@ const App: React.FC = () => {
           </ul>
         </nav>
          <div className="absolute bottom-6 left-4 right-4 text-center hidden lg:block">
-            <img src="https://raw.githubusercontent.com/clubesa/clubesa.github.io/main/producao/festivalLabCria/logoslabirintar/Labirintar_RGB.png" alt="LABirintar Logo" className="h-6 mx-auto opacity-70" />
+            <img src="../logosLabirintar/Logo2.png" alt="LABirintar Logo" className="h-14 mx-auto opacity-100" />
         </div>
       </aside>
 
