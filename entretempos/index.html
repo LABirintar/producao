@@ -1,18 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="data:," />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Entretempos - Educação Integral</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Babel Standalone for in-browser TSX/JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script>
+    <script>
       tailwind.config = {
         theme: {
           extend: {
@@ -35,20 +32,18 @@
         scroll-behavior: smooth;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.1.1",
-    "react-dom": "https://esm.sh/react-dom@^19.1.1"
-  }
-}
-</script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
-    <script type="text/babel" data-presets="typescript,react" src="./types.ts"></script>
-    <script type="text/babel" data-presets="typescript,react" src="./constants.tsx"></script>
-    <script type="text/babel" data-presets="typescript,react" src="./App.tsx"></script>
-    <script type="text/babel" data-presets="typescript,react" src="./index.tsx"></script>
+
+    <!-- 1. Load React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- 2. Load Babel to transpile JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- 3. Load your React App. Note the type="text/babel" -->
+    <script type="text/babel" src="./index.tsx"></script>
   </body>
 </html>
