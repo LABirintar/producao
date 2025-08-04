@@ -1,4 +1,5 @@
 
+
 // --- From types.ts ---
 interface Trail {
   name: string;
