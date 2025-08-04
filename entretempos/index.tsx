@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
 
 // --- From types.ts ---
 interface Trail {
@@ -215,7 +213,7 @@ const ExperienceTrails = () => (
 );
 
 const ImplementationStrategy = () => {
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = React.useState(0);
     const strategies = [
         { name: "Pequeno Porte", students: "Até 5.000 alunos", description: "Início como projeto piloto em escolas limitadas. Formação majoritariamente remota via LMS, com suporte direto da equipe central. O objetivo é validar o modelo e gerar um case de sucesso." },
         { name: "Médio Porte", students: "5.000 a 20.000 alunos", description: "Estratégia de \"densificação\". Identificação de \"Educadores Multiplicadores\" para formar pares. A plataforma de dados gera insights robustos para a secretaria municipal." },
