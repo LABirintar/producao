@@ -232,19 +232,19 @@ const ImplementationStrategy = () => {
                 <SectionSubtitle>Oferecemos um plano flexível que se adapta à escala e às características de cada município contratante.</SectionSubtitle>
                 <div className="max-w-4xl mx-auto">
                     <div className="flex border-b border-gray-200">
-                        {strategies.map((strategy, entretempos) => (
+                        {strategies.map((strategy, index) => (
                              <button
                                 key={strategy.name}
-                                onClick={() => setActiveTab(entretempos)}
-                                className={`py-4 px-6 block font-semibold text-lg focus:outline-none ${activeTab === entretempos ? 'border-b-4 border-primary text-primary' : 'text-slate-500 hover:text-primary'}`}
+                                onClick={() => setActiveTab(index)}
+                                className={`py-4 px-6 block font-semibold text-lg focus:outline-none ${activeTab === index ? 'border-b-4 border-primary text-primary' : 'text-slate-500 hover:text-primary'}`}
                             >
                                 {strategy.name}
                             </button>
                         ))}
                     </div>
                     <div className="mt-8">
-                        {strategies.map((strategy, entretempos) => (
-                            <div key={strategy.name} className={`${activeTab === entretempos ? 'block' : 'hidden'}`}>
+                        {strategies.map((strategy, index) => (
+                            <div key={strategy.name} className={`${activeTab === index ? 'block' : 'hidden'}`}>
                                 <h3 className="text-2xl font-bold text-slate-800">{strategy.name} <span className="text-lg font-normal text-slate-500">({strategy.students})</span></h3>
                                 <p className="mt-4 text-lg text-slate-600">{strategy.description}</p>
                             </div>
@@ -271,12 +271,12 @@ const ImplementationGuide = () => {
                 <SectionSubtitle>Nossa implementação é uma parceria que respeita e se integra à cultura de cada rede de ensino.</SectionSubtitle>
                 <div className="relative max-w-2xl mx-auto">
                     <div className="absolute left-1/2 top-0 h-full w-0.5 bg-accent1/50 transform -translate-x-1/2"></div>
-                    {steps.map((step, entretempos) => (
+                    {steps.map((step, index) => (
                         <div key={step.title} className="relative mb-12">
                             <div className="absolute left-1/2 top-4 w-6 h-6 bg-primary rounded-full transform -translate-x-1/2 border-4 border-backgroundLight"></div>
-                            <div className={`p-6 rounded-xl shadow-lg w-full ${entretempos % 2 === 0 ? 'md:ml-auto md:w-1/2 md:pr-12' : 'md:mr-auto md:w-1/2 md:pl-12'}`}>
+                            <div className={`p-6 rounded-xl shadow-lg w-full ${index % 2 === 0 ? 'md:ml-auto md:w-1/2 md:pr-12' : 'md:mr-auto md:w-1/2 md:pl-12'}`}>
                                 <div className="bg-white p-6 rounded-xl shadow-md">
-                                    <h4 className="text-xl font-bold text-primary mb-2">Passo {entretempos + 1}: {step.title}</h4>
+                                    <h4 className="text-xl font-bold text-primary mb-2">Passo {index + 1}: {step.title}</h4>
                                     <p className="text-slate-600">{step.description}</p>
                                 </div>
                             </div>
@@ -419,7 +419,7 @@ function App() {
   );
 }
 
-// From original entretempos.tsx
+// From original index.tsx
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
