@@ -69,7 +69,7 @@ const ChevronDownIcon = (props) => (
 );
 
 const SectionTitle = ({ children }) => (
-    <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-800 mb-4">{children}</h2>
+    <h2 className="text-3xl md:text-4xl font-sans font-bold text-center text-slate-800 mb-4">{children}</h2>
 );
 
 const SectionSubtitle = ({ children }) => (
@@ -91,12 +91,19 @@ const Nav = () => {
     return (
         <header className="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm">
             <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-                <a href="#" className="text-2xl font-bold text-primary">Entretempos</a>
+                <a href="#" className="text-2xl font-inter font-bold text-primary">Entretempos</a>
                 <div className="hidden md:flex space-x-6 items-center">
                     {navItems.map(item => (
                         <a key={item.name} href={item.href} className="text-slate-600 hover:text-primary transition-colors duration-300">{item.name}</a>
                     ))}
-                    <a href="#contact" className="bg-secondary text-white font-semibold px-4 py-2 rounded-full hover:bg-opacity-90 transition-all duration-300">Contato</a>
+                    <a
+                        href="https://wa.me/5511912303004"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-secondary text-white font-semibold px-4 py-2 rounded-full hover:bg-opacity-90 transition-all duration-300"
+                        >
+                        Contato
+                        </a>
                 </div>
             </nav>
         </header>
@@ -108,7 +115,7 @@ const Hero = () => (
         <div
             className="absolute inset-0 z-0 opacity-10"
             style={{
-                backgroundImage: `url(https://picsum.photos/seed/education/1920/1080)`,
+                backgroundImage: `url(./imagens/crianca-fundo-cima.jpg)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
@@ -118,14 +125,8 @@ const Hero = () => (
                 <span className="text-primary">Entretempos:</span> Vivências de Educação Integral
             </h1>
             <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto mb-8">
-                Ressignificando o tempo e o espaço escolar para transformar a educação pública na primeira infância.
+                Ressignificando o tempo e o espaço escolar para transformar a educação pública na Primeira Infância.
             </p>
-            <a href="#about" className="bg-primary text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-opacity-90 transition-transform duration-300 inline-block transform hover:scale-105 shadow-lg">
-                Descubra Mais
-            </a>
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-                <ChevronDownIcon className="w-8 h-8 text-primary"/>
-            </div>
         </div>
     </section>
 );
@@ -144,9 +145,13 @@ const AboutName = () => (
                     <p>"Entretempos" sugere um tempo que se tece de forma diferente, <strong className="text-secondary">mais lento, sensível e poético,</strong> em contraponto à aceleração do tempo produtivo.</p>
                     <p>"Vivências de Educação Integral" complementa a ideia, destacando a abordagem metodológica que valoriza a experiência e a integralidade do desenvolvimento infantil no coração desses momentos.</p>
                 </div>
-                <div>
-                    <img src="https://picsum.photos/seed/children/600/400" alt="Crianças brincando" className="rounded-xl shadow-2xl" />
-                </div>
+                <div className="w-full h-[500px] overflow-hidden rounded-xl shadow-2xl">
+                    <img
+                        src="./imagens/crianca-fundo-cima2.jpg"
+                        alt="Crianças brincando"
+                        className="w-full h-full object-cover object-center"
+                    />
+                    </div>
             </div>
         </div>
     </section>
@@ -216,7 +221,7 @@ const ExperienceTrails = () => (
 const ImplementationStrategy = () => {
     const [activeTab, setActiveTab] = React.useState(0);
     const strategies = [
-        { name: "Pequeno Porte", students: "Até 5.000 alunos", description: "Início como projeto piloto em escolas limitadas. Formação majoritariamente remota via LMS, com suporte direto da equipe central. O objetivo é validar o modelo e gerar um case de sucesso." },
+        { name: "Pequeno Porte", students: "Até 5.000 alunos", description: "Início como projeto piloto em escolas limitadas. Formação majoritariamente remota via Google Meet, com suporte direto da equipe central. O objetivo é validar o modelo e gerar um case de sucesso." },
         { name: "Médio Porte", students: "5.000 a 20.000 alunos", description: "Estratégia de \"densificação\". Identificação de \"Educadores Multiplicadores\" para formar pares. A plataforma de dados gera insights robustos para a secretaria municipal." },
         { name: "Grande Rede", students: "Acima de 20.000 alunos", description: "Implementação por fases (ex: por diretorias). Estrutura de formação em rede com múltiplos \"Educadores Multiplicadores\". A geração de dados torna-se estratégica para a governança de toda a rede." },
     ];
@@ -256,7 +261,7 @@ const ImplementationGuide = () => {
     const steps = [
         { title: "Diagnóstico Sensível e Alinhamento", description: "A jornada começa com a escuta para compreender realidades locais, alinhar a proposta ao PPP da escola e mapear os espaços." },
         { title: "Formação e Sensibilização da Equipe", description: "Capacitação dos educadores para o uso autônomo e poético das trilhas, combinando encontros online, materiais na plataforma e encontros presenciais." },
-        { title: "Lançamento e Acompanhamento Contínuo", description: "As trilhas ganham vida nas escolas. Acompanhamento próximo da LABirintar com encontros quinzenais e um canal de feedback constante." },
+        { title: "Lançamento e Acompanhamento Contínuo", description: "As trilhas ganham vida nas escolas. Acompanhamento próximo da LABirintar com encontros quinzenais on-line e um canal de feedback constante." },
         { title: "Engajamento das Famílias e Comunidade", description: "A transformação é um esforço coletivo. Fornecemos estratégias para engajar pais e responsáveis, tornando as famílias aliadas no processo." }
     ];
 
@@ -269,10 +274,10 @@ const ImplementationGuide = () => {
                     <div className="absolute left-1/2 top-0 h-full w-0.5 bg-accent1/50 transform -translate-x-1/2"></div>
                     {steps.map((step, index) => (
                         <div key={step.title} className="relative mb-12 flex justify-center">
-                            <div className="absolute left-1/2 top-4 w-6 h-6 bg-primary rounded-full transform -translate-x-1/2 border-4 border-backgroundLight z-10"></div>
+                            <div className="absolute left-1/2 top-[-1rem] w-6 h-6 bg-primary rounded-full transform -translate-x-1/2 border-4 border-backgroundLight z-10"></div>
                             <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pl-12 md:text-left' : 'md:pr-12 md:text-right'}`}>
                                 <div className="bg-white p-6 rounded-xl shadow-md">
-                                    <h4 className="text-xl font-bold text-primary mb-2">Passo {index + 1}: {step.title}</h4>
+                                    <h4 className="text-xl font-bold text-primary mb-2">Movimento {index + 1}: {step.title}</h4>
                                     <p className="text-slate-600">{step.description}</p>
                                 </div>
                             </div>
