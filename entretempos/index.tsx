@@ -115,7 +115,7 @@ const Hero = () => (
         <div
             className="absolute inset-0 z-0 opacity-10"
             style={{
-                backgroundImage: `url(/imagens/crianca-fundo-cima.jpg)`,
+                backgroundImage: `url(./imagens/crianca-fundo-cima.jpg)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
@@ -147,7 +147,7 @@ const AboutName = () => (
                 </div>
                 <div className="w-full h-[500px] overflow-hidden rounded-xl shadow-2xl">
                     <img
-                        src="/imagens/crianca-fundo-cima2.jpg"
+                        src="./imagens/crianca-fundo-cima2.jpg"
                         alt="Crianças brincando"
                         className="w-full h-full object-cover object-center"
                     />
