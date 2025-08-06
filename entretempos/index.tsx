@@ -97,9 +97,11 @@ const Nav = () => {
                         <a key={item.name} href={item.href} className="text-slate-600 hover:text-primary transition-colors duration-300">{item.name}</a>
                     ))}
                     <a
-                        href="https://wa.me/5511912303004"
+                        href="https://wa.me/5511912303004?text=Olá%20gostaria%20de%20saber%20mais%20sobre%20o%20Entretempos"
                         target="_blank"
                         rel="noopener noreferrer"
+                        title="Fale conosco no WhatsApp"
+                        aria-label="Fale conosco no WhatsApp"
                         className="bg-secondary text-white font-semibold px-4 py-2 rounded-full hover:bg-opacity-90 transition-all duration-300"
                         >
                         Contato
@@ -388,9 +390,14 @@ const Footer = () => (
         <div className="container mx-auto px-6 py-12 text-center">
             <h2 className="text-3xl font-bold mb-4">Vamos transformar a educação juntos?</h2>
             <p className="text-slate-700 mb-8 max-w-2xl mx-auto">Entre em contato para saber como o Entretempos pode ser implementado em seu município.</p>
-            <button className="bg-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-opacity-90 transition-transform duration-300 inline-block transform hover:scale-105 shadow-lg">
+            <a 
+                href="https://wa.me/5511912303004?text=Olá%20gostaria%20de%20saber%20mais%20sobre%20o%20Entretempos" 
+                className="bg-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-opacity-90 transition-transform duration-300 inline-block transform hover:scale-105 shadow-lg"
+                title="Fale conosco no WhatsApp"
+                aria-label="Fale conosco no WhatsApp"
+            >
                 Fale Conosco
-            </button>
+            </a>
             <div className="mt-12 border-t border-slate-700 pt-8">
                 <p className="text-slate-400">&copy; {new Date().getFullYear()} Entretempos. Todos os direitos reservados.</p>
             </div>
