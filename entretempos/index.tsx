@@ -384,10 +384,10 @@ const ImpactMeasurement = () => (
 
 
 const Footer = () => (
-    <footer id="contact" className="bg-slate-800 text-white">
+    <footer id="contact" className="bg-[#aec5e7] text-slate-700">
         <div className="container mx-auto px-6 py-12 text-center">
             <h2 className="text-3xl font-bold mb-4">Vamos transformar a educação juntos?</h2>
-            <p className="text-slate-300 mb-8 max-w-2xl mx-auto">Entre em contato para saber como o Entretempos pode ser implementado em seu município.</p>
+            <p className="text-slate-700 mb-8 max-w-2xl mx-auto">Entre em contato para saber como o Entretempos pode ser implementado em seu município.</p>
             <button className="bg-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-opacity-90 transition-transform duration-300 inline-block transform hover:scale-105 shadow-lg">
                 Fale Conosco
             </button>
