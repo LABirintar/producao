@@ -13,7 +13,7 @@ interface Trail {
 // --- From constants.tsx ---
 const trailsData: Trail[] = [
   {
-    name: 'Infância Sem Excesso',
+    name: 'Infância Sem Excesso (Curadoria das Infâncias)',
     concept: 'Desaceleração, essencialidade, consumo consciente. (Ref: Infância Sem Excesso, Quintais Brincantes)',
     activities: 'Ateliê de arte miúda, brincar com materiais não estruturados (papel, retalhos, sucatas), exploração de um único material por vez, ocupação de espaços não convencionais.',
     materials: 'Materiais simples e reutilizáveis: papel, tecidos, caixas, fitas, elementos da natureza. Kit de "sementes" para ateliês.',
@@ -21,7 +21,7 @@ const trailsData: Trail[] = [
     competencies: 'Criatividade, Pensamento Crítico, Sustentabilidade.',
   },
   {
-    name: 'CidadeVamos',
+    name: 'Cidade Vamos (Territórios Urbanos e Sustentabilidade)',
     concept: 'A cidade como território educativo e poético. (Ref: Cidades Educadoras, Território do Brincar, Quintais Brincantes)',
     activities: 'Cartografias sensíveis do entorno da escola, percursos com "olhos de criança", criação de mapas afetivos, diálogos com a memória do bairro, mini-documentários.',
     materials: 'Cadernos de campo, câmeras (celular), gravadores de áudio, mapas, objetos coletados nos passeios.',
@@ -29,7 +29,7 @@ const trailsData: Trail[] = [
     competencies: 'Curiosidade, Colaboração, Comunicação, Cidadania.',
   },
   {
-    name: 'Pequenos Meditadores',
+    name: 'Pequenos Meditadores (Mindfulness)',
     concept: 'Mindfulness, educação emocional, autoconhecimento. (Ref: Práticas de atenção plena para crianças)',
     activities: 'Meditações guiadas com histórias, brincadeiras com a respiração, atividades de concentração ("só um"), rotinas de escuta afetiva e partilha de sentimentos.',
     materials: 'Áudios com meditações guiadas, objetos sensoriais (penas, sinos), livros com histórias temáticas.',
@@ -45,7 +45,7 @@ const trailsData: Trail[] = [
     competencies: 'Resiliência, Colaboração, Criatividade, Autoconfiança.',
   },
   {
-    name: 'Seu Filão (Cozinha)',
+    name: 'Seu Filão (Saberes Manuais e Cozinha)',
     concept: 'Pedagogia do gesto, saberes manuais, cultura alimentar. (Ref: Panificação artesanal, Cozinhas dos Quintais Brincantes)',
     activities: 'Confecção de pães simples, exploração sensorial de ingredientes, sovar a massa, acompanhar o tempo do fermento, roda de partilha do alimento.',
     materials: 'Kit básico com ingredientes (farinha, fermento), utensílios simples, cadernos de receita ilustrados.',
@@ -53,7 +53,7 @@ const trailsData: Trail[] = [
     competencies: 'Paciência, Colaboração, Consciência de Processos.',
   },
   {
-    name: 'Brinquedos do Quintal',
+    name: 'Brinquedos do Quintal (Brincar Livre)',
     concept: 'Resgate da cultura da infância e do brincar tradicional brasileiro. (Ref: Quintais Brincantes, Território do Brincar)',
     activities: 'Vivências com brinquedos tradicionais, brincadeiras cantadas e jogos de roda, construção de brinquedos com materiais da natureza.',
     materials: 'Não estruturados, elementos da natureza, acervo de cantigas e brincadeiras populares.',
