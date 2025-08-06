@@ -135,7 +135,7 @@ const Hero = () => (
 const AboutName = () => (
     <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-6">
-            <SectionTitle>O porquê do nome "Entretempos"</SectionTitle>
+            <SectionTitle>O propósito do Entretempos</SectionTitle>
             <SectionSubtitle>
                 O nome "Entretempos" captura a essência da proposta: atuar no tempo "entre" os turnos escolares, nos interstícios e intervalos que, muitas vezes, são vistos como meras pausas.
             </SectionSubtitle>
