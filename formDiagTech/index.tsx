@@ -321,7 +321,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/robotics/800/450', alt: 'Uma mesa com peças de robótica, um tablet aberto e mãos jovens montando um protótipo' },
+      image: { src: '/imagens/img_1.jpg', alt: '' },
       prompts: ['Você já viveu algo parecido?', 'Se pudesse criar algo com tecnologia agora, o que seria?'],
     },
     {
@@ -329,7 +329,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/socialsky/800/450', alt: 'Um céu estrelado sobreposto a ícones de redes sociais flutuando (Instagram, TikTok, YouTube)' },
+      image: { src: '/imagens/img_2.jpg', alt: '' },
       prompts: ['Alguma dessas redes faz parte do seu universo?', 'O que te fascina e o que te cansa nesse "céu digital"?'],
     },
     {
@@ -337,7 +337,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/graffiti/800/450', alt: 'Um mural grafitado com as palavras: "Controle, Criatividade, Caos"' },
+      image: { src: '/imagens/img_3.jpg', alt: '' },
       prompts: ['O que você escolheria se tivesse que criar um projeto digital: Controle? Criatividade? Caos? Explique por quê.'],
     },
     {
@@ -345,7 +345,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/rooftop/800/450', alt: 'Um adolescente sentado sozinho no topo de um prédio, olhando para a cidade iluminada à noite, com fones de ouvido.' },
+      image: { src: '/imagens/img_4.jpg', alt: '' },
       prompts: ['O que passa pela sua cabeça quando está só com você e sua música?'],
     },
     {
@@ -353,7 +353,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/restaurant/800/450', alt: 'Um grupo de adolescentes sentados na mesa de um restaurante, todos olhando para seus celulares.' },
+      image: { src: '/imagens/img_5.jpg', alt: '' },
       prompts: ['O que você sente quando está com muita gente... mas ninguém está de verdade?'],
     },
     {
@@ -361,7 +361,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/vr/800/450', alt: 'Um adolescente com óculos de realidade virtual (VR), cercado de cabos e luzes neon, mas com uma expressão entre fascínio e desconforto.' },
+      image: { src: '/imagens/img_6.jpg', alt: '' },
       prompts: ['Você se imagina vivendo dentro de um mundo criado por uma tela? Como seria esse lugar?'],
     },
     {
@@ -369,7 +369,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/tabletforest/800/450', alt: 'Um menino ou menina segurando um tablet enquanto toca em folhas ou raízes.' },
+      image: { src: '/imagens/img_7.jpg', alt: '' },
       prompts: ['Você sente que sua vida acontece mais dentro ou fora das telas? Onde está sua potência?'],
     },
     {
@@ -377,7 +377,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/gamer/800/450', alt: 'Uma cena dividida ao meio — de um lado um jovem jogando videogame, do outro, programando seu próprio jogo.' },
+      image: { src: '/imagens/img_8.jpg', alt: '' },
       prompts: ['Você se vê como criador de tecnologia ou apenas usuário dela?'],
     },
     {
@@ -385,7 +385,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/dancing/800/450', alt: 'Um adolescente dançando livremente em um galpão vazio com uma projeção digital atrás.' },
+      image: { src: '/imagens/img_9.jpg', alt: '' },
       prompts: ['Quando seu corpo fala mais que o teclado?'],
     },
     {
@@ -393,7 +393,7 @@ const App: React.FC = () => {
       block: 2,
       type: 'image-text',
       text: '',
-      image: { src: 'https://picsum.photos/seed/collage/800/450', alt: 'Um retrato em colagem de vários rostos adolescentes misturados com avatares digitais e emojis.' },
+      image: { src: '/imagens/img_10.jpg', alt: '' },
       prompts: ['Quantas versões de você existem? O que você mostra? O que você esconde?'],
     },
   ];
