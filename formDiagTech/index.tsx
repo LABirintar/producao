@@ -150,7 +150,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({ question, questio
                     value={option}
                     checked={isChecked}
                     onChange={() => handleCheckboxChange(option)}
-                    className="h-6 w-6 rounded-md border-gray-400 text-brand-red focus:ring-brand-red focus:ring-2 shrink-0"
+                    className="h-6 w-6 rounded-md border-gray-400 accent-brand-red text-brand-red focus:ring-brand-red focus:ring-2 shrink-0"
                   />
                   <span className="ml-4 text-lg text-gray-800">
                     <b className="font-semibold mr-2">{String.fromCharCode(97 + index)})</b>
