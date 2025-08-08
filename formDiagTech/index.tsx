@@ -50,7 +50,11 @@ interface WelcomeScreenProps {
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   return (
     <div className="text-center max-w-2xl mx-auto animate-fade-in">
-      <img src="./imagens/img_capa.jpg" alt="Capa do formulário" className="w-3/4 mx-auto rounded-lg shadow-lg mb-8" />
+      <img
+        src="./imagens/Labirintar_RGB.png"
+        alt="Capa do formulário"
+        className="w-3/4 mx-auto rounded-lg mb-8"
+      />
       <h1 className="text-3xl md:text-4xl font-bold text-brand-red mb-4">
         Entremundos
       </h1>
@@ -247,7 +251,9 @@ const ThankYouScreen: React.FC = () => {
         Suas respostas foram enviadas com sucesso.
       </p>
       <p className="text-lg text-gray-600 mt-4">
-        Agradecemos por compartilhar suas ideias e sentimentos com a gente. Sua participação é muito importante!
+        Você acabou de abrir uma janela do seu universo para nós.
+        <br />
+        Cada resposta sua ajuda a LABirintar a criar experiências que misturam curiosidade, criação e um tantinho de ousadia.
       </p>
     </div>
   );
@@ -265,7 +271,7 @@ const App: React.FC = () => {
       block: 1,
       type: 'multiple-choice',
       text: 'Quando você pensa em tecnologia, o que vem à sua cabeça?',
-      subtext: '(escolha livre + múltipla escolha com sugestões)',
+      subtext: '',
       isMultiSelect: true,
       options: ['Jogos', 'Celular', 'Inteligência Artificial', 'Redes sociais', 'Computador', 'Streaming / YouTube', 'Robôs', 'Outros'],
     },
@@ -283,14 +289,14 @@ const App: React.FC = () => {
       block: 1,
       type: 'text',
       text: 'Existe alguma coisa no mundo digital que te cansa ou te incomoda?',
-      subtext: '(resposta aberta)',
+      subtext: '',
     },
     {
       id: 'q4',
       block: 1,
       type: 'text',
       text: 'Você já quis aprender a fazer algo usando tecnologia, mas nunca teve a chance?',
-      subtext: '(resposta aberta)',
+      subtext: '',
     },
     {
       id: 'q5',
@@ -523,9 +529,6 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-brand-cream text-gray-800 flex flex-col items-center justify-center p-4 selection:bg-brand-red selection:text-white">
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
-        {currentStep > -1 && status !== 'submitted' && (
-           <h1 className="text-3xl font-bold text-brand-red mb-2">Formulário Diagnóstico</h1>
-        )}
 
         <div className="w-full bg-white rounded-lg shadow-2xl p-6 md:p-10 min-h-[600px] flex flex-col justify-between text-gray-800">
           <div className="flex-grow flex items-center justify-center">
