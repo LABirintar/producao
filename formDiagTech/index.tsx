@@ -50,23 +50,26 @@ interface WelcomeScreenProps {
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   return (
     <div className="text-center max-w-2xl mx-auto animate-fade-in">
+      <img src="./imagens/img_capa.jpg" alt="Capa do formulário" className="w-3/4 mx-auto rounded-lg shadow-lg mb-8" />
       <h1 className="text-3xl md:text-4xl font-bold text-brand-red mb-4">
-        Formulário diagnóstico - Tecnologia
+        Entremundos
       </h1>
       <h2 className="text-xl md:text-2xl text-gray-700 font-semibold mb-6">
-        Entremundos: Um convite para pensar e sentir tecnologia
+        Um convite para pensar e sentir tecnologia
       </h2>
       <div className="text-left text-gray-600 space-y-4 text-lg">
         <p>
-          Ei, antes de tudo: este formulário não é uma prova, nem uma entrevista.
+          Ei, antes de tudo: este formulário não é uma prova, nem uma
+          entrevista.
         </p>
         <p>
-          É um convite pra você parar um pouco e pensar.
-          A gente quer saber: o que você curte, o que te dá preguiça, o que você gostaria de
-          aprender, criar, descobrir, transformar quando o assunto é tecnologia.
+          É um convite pra você parar um pouco e pensar. A gente quer saber: o
+          que você curte, o que te dá preguiça, o que você gostaria de aprender,
+          criar, descobrir, transformar quando o assunto é tecnologia.
         </p>
         <p>
-          Fique à vontade. Responda com sinceridade. Isso é pra você e sobre você.
+          Fique à vontade. Responda com sinceridade. Isso é pra você e sobre
+          você.
         </p>
       </div>
       <button
