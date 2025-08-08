@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escola Builders - Formulário Diagnóstico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-red': '#ff595a',
+              'brand-orange': '#ffa400',
+              'brand-cream': '#ffe9c9',
+              'brand-lavender': '#e6cbe4',
+              'brand-blue': '#aec5e7',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-brand-cream text-gray-800 antialiased">
+    <div id="root"></div>
+    <!--
+      GOOGLE APPS SCRIPT SETUP (Code.gs.js)
+      This code should be deployed as a Google Apps Script Web App to handle form submissions.
+
+      Instructions:
+      1. Open your Google Sheet.
+      2. Go to Extensions > Apps Script.
+      3. Paste this code into the `Code.gs` file and save.
+      4. In the script editor, click `Deploy` > `New deployment`.
+      5. Select `Web app` as the deployment type.
+      6. In the configuration:
+         - Give it a description (e.g., "Escola Builders Survey Endpoint").
+         - Execute as: "Me".
+         - Who has access: "Anyone" (This is necessary for the web app to post data).
+      7. Click `Deploy`.
+      8. IMPORTANT: Authorize the permissions when prompted.
+      9. Copy the `Web app URL` provided.
+      10. Paste this URL into the `GOOGLE_APPS_SCRIPT_URL` constant in `index.tsx`.
+
+      --- SCRIPT CODE ---
+
+      // ** Replace with your actual Google Sheet ID **
+      var SPREADSHEET_ID = "YOUR_SPREADSHEET_ID_HERE";
+      var SHEET_NAME = "Respostas"; // The name of the sheet/tab to save data to.
+
+      // These headers must match the order of data processed below.
+      var HEADERS = [
+        "Timestamp", "Q1: Tech Thoughts", "Q2: Online Activities", "Q3: Digital Annoyances",
+        "Q4: Want to Learn", "Q5: Self-description", "Q6: Areas to Explore",
+        "Q7_P1: Lived Similar?", "Q7_P2: Would Create?",
+        "Q8_P1: Your Networks?", "Q8_P2: Fascinates/Tires?",
+        "Q9_P1: Control/Creativity/Chaos?",
+        "Q10_P1: You and Music?",
+        "Q11_P1: Together but Alone?",
+        "Q12_P1: World in a Screen?",
+        "Q13_P1: Inside/Outside Screen?",
+        "Q14_P1: Creator or User?",
+        "Q15_P1: Body > Keyboard?",
+        "Q16_P1: Your Versions?"
+      ];
+
+      function doPost(e) {
+        try {
+          var sheet = getSheet();
+          initializeHeaders(sheet);
+
+          var data = JSON.parse(e.postData.contents);
+          
+          // Flatten answers into an array that matches the header order
+          var rowData = [
+            data.submissionTimestamp || new Date().toISOString(),
+            formatAnswer(data.q1),
+            formatAnswer(data.q2),
+            formatAnswer(data.q3),
+            formatAnswer(data.q4),
+            formatAnswer(data.q5),
+            formatAnswer(data.q6),
+            formatAnswer(data.q7, 'prompt1'),
+            formatAnswer(data.q7, 'prompt2'),
+            formatAnswer(data.q8, 'prompt1'),
+            formatAnswer(data.q8, 'prompt2'),
+            formatAnswer(data.q9, 'prompt1'),
+            formatAnswer(data.q10, 'prompt1'),
+            formatAnswer(data.q11, 'prompt1'),
+            formatAnswer(data.q12, 'prompt1'),
+            formatAnswer(data.q13, 'prompt1'),
+            formatAnswer(data.q14, 'prompt1'),
+            formatAnswer(data.q15, 'prompt1'),
+            formatAnswer(data.q16, 'prompt1'),
+          ];
+
+          sheet.appendRow(rowData);
+
+          return ContentService
+            .createTextOutput(JSON.stringify({ "result": "success" }))
+            .setMimeType(ContentService.MimeType.JSON);
+
+        } catch (error) {
+          Logger.log(error);
+          return ContentService
+            .createTextOutput(JSON.stringify({ "result": "error", "error": error.message }))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+
+      function getSheet() {
+        var spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+        var sheet = spreadsheet.getSheetByName(SHEET_NAME);
+        if (!sheet) {
+          sheet = spreadsheet.insertSheet(SHEET_NAME);
+        }
+        return sheet;
+      }
+
+      function initializeHeaders(sheet) {
+        var lastRow = sheet.getLastRow();
+        if (lastRow < 1) {
+          sheet.appendRow(HEADERS);
+        }
+      }
+
+      function formatAnswer(answer, promptKey) {
+        if (answer === undefined || answer === null) {
+          return "";
+        }
+        if (typeof answer === 'object' && !Array.isArray(answer)) {
+          return answer[promptKey] || "";
+        }
+        if (Array.isArray(answer)) {
+          return answer.join(', ');
+        }
+        return String(answer);
+      }
+    -->
+  </body>
+</html>
