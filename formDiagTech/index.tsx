@@ -212,7 +212,7 @@ const ImageQuestionComponent: React.FC<ImageQuestionComponentProps> = ({ questio
             <img
               src={question.image.src}
               alt={question.image.alt}
-              className="rounded-lg shadow-lg w-full h-auto lg:aspect-video lg:object-cover"
+              className="rounded-lg shadow-lg w-full h-auto"
             />
           )}
         </div>
