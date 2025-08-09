@@ -55,6 +55,18 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
         alt="Capa do formulário"
         className="w-3/4 mx-auto rounded-lg mb-8"
       />
+      <div className="flex justify-center gap-4 mb-8">
+        <img
+          src="./imagens/img_capa2.jpg"
+          alt="Capa do formulário"
+          className="w-1/2 rounded-lg"
+        />
+        <img
+          src="./imagens/img_capa1.jpg"
+          alt="Capa do formulário"
+          className="w-1/2 rounded-lg"
+        />
+      </div>
       <h1 className="text-3xl md:text-4xl font-bold text-brand-red mb-4">
         Entremundos
       </h1>
