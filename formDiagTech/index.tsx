@@ -67,7 +67,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
           className="w-1/2 rounded-lg"
         />
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold text-brand-red mb-4">
+      <h1 className="text-3xl md:text-4xl font-bold text-brand-orange mb-4">
         Entremundos
       </h1>
       <h2 className="text-xl md:text-2xl text-gray-700 font-semibold mb-6">
@@ -90,7 +90,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
       </div>
       <button
         onClick={onStart}
-        className="mt-10 inline-flex items-center gap-3 text-xl font-bold bg-brand-red hover:brightness-95 active:brightness-90 text-white py-3 px-8 rounded-lg transition-transform transform hover:scale-105"
+        className="mt-10 inline-flex items-center gap-3 text-xl font-bold bg-brand-orange hover:brightness-95 active:brightness-90 text-white py-3 px-8 rounded-lg transition-transform transform hover:scale-105"
       >
         Bora?
       </button>
@@ -581,7 +581,7 @@ const App: React.FC = () => {
         </div>
       </div>
        <footer className="text-center mt-8 text-gray-500 text-sm">
-        <p>Powered by Escola Builders</p>
+        <p>Powered by Builders School</p>
       </footer>
     </div>
   );
