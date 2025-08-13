@@ -275,7 +275,7 @@ const ThankYouScreen: React.FC = () => {
 
 const App: React.FC = () => {
   // IMPORTANT: Replace this with your actual Google Apps Script Web App URL
-  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+  const GOOGLE_APPS_SCRIPT_URL = 'https://n8n.injunior.com.br/webhook/labirintar';
 
   const surveyQuestions: Question[] = [
     {
